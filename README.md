@@ -10,6 +10,6 @@ A Cordova plugin that provides secure peer-to-peer and mesh-hybrid communication
 ## Installation
 
 ```bash
-$ cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet
+cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet
 ```
 
