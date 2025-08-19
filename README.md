@@ -27,7 +27,6 @@ cordova-plugin-resqpeernet/
 │   ├── API_REFERENCE.md
 │   ├── README.md
 │   └── ROADMAP.md
-│
 ```
 
 ## Installation
