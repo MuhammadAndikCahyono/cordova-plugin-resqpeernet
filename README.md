@@ -11,8 +11,8 @@ A Cordova plugin that provides secure peer-to-peer and mesh-hybrid communication
 cordova-plugin-resqpeernet/
 │
 ├── plugin/
-│   ├── www/resqpeernet.js
-│   ├── src/android/...
+│   ├── src/js/resqpeernet.js
+│   ├── src/android/ResqPerrNet.java
 │   ├── src/browser/...
 │   └── plugin.xml
 │
