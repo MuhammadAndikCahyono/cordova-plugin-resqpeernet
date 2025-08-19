@@ -40,3 +40,12 @@ cordova-plugin-resqpeernet/
 cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet
 ```
 
+| API                     | Tipe              | Deskripsi                                                 | Contoh                                                                          |
+| ----------------------- | ----------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `startService(options)` | Method            | Menyalakan service background agar tetap hidup.           | `cordova.plugins.propp.startService({ keepAlive: true })`                       |
+| `stopService()`         | Method            | Mematikan service background.                             | `cordova.plugins.propp.stopService()`                                           |
+| `isRunning()`           | Method            | Mengecek apakah service sedang aktif.                     | `cordova.plugins.propp.isRunning(status => console.log(status))`                |
+| `onServiceStarted(cb)`  | Event             | Listener saat service berhasil start.                     | `cordova.plugins.propp.onServiceStarted(() => console.log("Service aktif"))`    |
+| `onServiceStopped(cb)`  | Event             | Listener saat service berhenti.                           | `cordova.plugins.propp.onServiceStopped(() => console.log("Service berhenti"))` |
+| `onError(cb)`           | Event             | Listener ketika terjadi error di plugin.                  | `cordova.plugins.propp.onError(err => console.error(err))`                      |
+| `startAuto(options)`    | Method (opsional) | Wrapper otomatis `startService()` + setup listener dasar. | `cordova.plugins.propp.startAuto({ keepAlive: true })`                          |
