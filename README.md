@@ -7,6 +7,25 @@ A Cordova plugin that provides secure peer-to-peer and mesh-hybrid communication
 - Browser
 - Electron
 
+```bash
+cordova-plugin-resqpeernet/
+│
+├── plugin/
+│   ├── www/resqpeernet.js
+│   ├── src/android/...
+│   ├── src/browser/...
+│   └── plugin.xml
+│
+├── demo/
+│
+├── docs/
+│   ├── API_REFERENCE.md
+│   ├── README.md
+│   └── ROADMAP.md
+│
+└── package.json
+```
+
 ## Installation
 
 ```bash
