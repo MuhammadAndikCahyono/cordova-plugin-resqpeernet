@@ -84,3 +84,8 @@ cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpe
 | `enableWSS(urls)` | Method | Aktifkan tracker TLS/WSS untuk peer discovery. | `cordova.plugins.resqpeernet.enableWSS(["wss://tracker.example.com"])` |
 | `disableWSS()`    | Method | Nonaktifkan tracker TLS/WSS.                   | `cordova.plugins.resqpeernet.disableWSS()`                             |
 
+## Logging & Monitoring
+
+| API         | Tipe   | Deskripsi                       | Contoh                                                       |
+| ----------- | ------ | ------------------------------- | ------------------------------------------------------------ |
+| `getLogs()` | Method | Mengambil log aktivitas plugin. | `cordova.plugins.resqpeernet.getLogs(logs => console.table(logs))` |
