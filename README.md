@@ -68,3 +68,19 @@ cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpe
 | `sendMessage(peerId, msg)` | Method | Mengirim pesan ke peer tertentu.    | `cordova.plugins.resqpeernet.sendMessage("peer-123", "Halo!")`     |
 | `broadcastMessage(msg)`    | Method | Mengirim pesan ke semua peer aktif. | `cordova.plugins.resqpeernet.broadcastMessage("Halo semua peer!")` |
 | `onMessage(cb)`            | Event  | Listener saat pesan masuk diterima. | `cordova.plugins.resqpeernet.onMessage(msg => console.log(msg))`   |
+
+## File / Data Transfer
+
+| API                         | Tipe   | Deskripsi                                        | Contoh                                                            |
+| --------------------------- | ------ | ------------------------------------------------ | ----------------------------------------------------------------- |
+| `sendFile(peerId, fileUri)` | Method | Mengirim file ke peer tertentu.                  | `cordova.plugins.resqpeernet.sendFile("peer-123", "/path/to/file")`     |
+| `onFileReceived(cb)`        | Event  | Listener saat file diterima.                     | `cordova.plugins.resqpeernet.onFileReceived(file => console.log(file))` |
+| `openFileChooser(cb)`       | Method | Membuka file chooser Android untuk memilih file. | `cordova.plugins.resqpeernet.openFileChooser(uri => console.log(uri))`  |
+
+## Tracker & Discovery
+
+| API               | Tipe   | Deskripsi                                      | Contoh                                                           |
+| ----------------- | ------ | ---------------------------------------------- | ---------------------------------------------------------------- |
+| `enableWSS(urls)` | Method | Aktifkan tracker TLS/WSS untuk peer discovery. | `cordova.plugins.resqpeernet.enableWSS(["wss://tracker.example.com"])` |
+| `disableWSS()`    | Method | Nonaktifkan tracker TLS/WSS.                   | `cordova.plugins.resqpeernet.disableWSS()`                             |
+
