@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-resqpeernet" version="1.0.0">
+
+  <name>ResQPeerNet</name>
+    <description>P2P & Mesh Networking plugin for Cordova (Emergency-ready)</description>
+    <license>Apache-2.0</license>
+    <keywords>cordova, p2p, mesh, bluetooth, wifi, webrtc, websocket, emergency</keywords>
+    <repo>https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet</repo>
+    <issue>https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet/issues</issue>
+
+    <!-- Support Cordova engines -->
+    <engines>
+        <engine name="cordova" version=">=10.0.0"/>
+        <engine name="cordova-android" version=">=9.0.0"/>
+        <engine name="cordova-ios" version=">=6.2.0"/>
+    </engines>
+
+    <!-- JS Module -->
+    <js-module src="www/resqpeernet.js" name="ResQPeerNet">
+        <clobbers target="resqpeernet"/>
+    </js-module>
+
+    <!-- Android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="ResQPeerNet">
+                <param name="android-package" value="org.apache.cordova.resqpeernet.ResqPeerNet"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet"/>
+    </platform>
+
+    <!-- iOS -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="ResQPeerNet">
+                <param name="ios-package" value="ResqPeerNet"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/ios/ResqPeerNet.m" />
+    </platform>
+</plugin>
