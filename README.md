@@ -34,6 +34,24 @@ cordova-plugin-resqpeernet/
 
 ```
 
+
+| Fitur                                                                 | **Full** | **Lite** |
+| --------------------------------------------------------------------- | -------- | -------- |
+| **Mesh-Hybrid (BLE + WiFi Direct + LAN mDNS + WebRTC + WS fallback)** | ✅        | ✅        |
+| **Auto-connect background**                                           | ✅        | ✅        |
+| **Emergency Mode**                                                    | ✅        | ✅        |
+| **File transfer (foto, video, audio, dokumen)**                       | ✅        | ✅        |
+| **Live streaming & screen sharing**                                   | ✅        | ✅        |
+| **Social API (post, like, komentar)**                                 | ✅        | ✅        |
+| **Marketplace API**                                              | ✅        | ✅        |
+| **Offline Maps & Nearby**                                             | ✅        | ✅        |
+| **NFC connect**                                                       | ✅        | ✅        |
+| **Telepon & SMS API (baca & kirim SMS, panggil & terima panggilan)**  | ✅        | ❌        |
+| **Akses kontak & riwayat panggilan**                                  | ✅        | ❌        |
+| **Kompatibilitas Android 5+**                                         | ✅        | ✅        |
+| **Cordova + Browser + Electron support**                              | ✅        | ✅        |
+
+
 ## Installation
 
 ```bash
