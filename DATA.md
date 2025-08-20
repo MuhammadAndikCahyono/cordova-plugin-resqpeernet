@@ -75,7 +75,7 @@
 
 ```
 ### Navigator / Map Data
-```jason
+```json
 {
   "nid": "uuid-v4",
   "author": "uid",
