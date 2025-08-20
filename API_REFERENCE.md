@@ -43,23 +43,6 @@
 | `enableWSS(urls)` | Method | Aktifkan tracker TLS/WSS untuk peer discovery. | `cordova.plugins.resqpeernet.enableWSS(["wss://tracker.example.com"])` |
 | `disableWSS()`    | Method | Nonaktifkan tracker TLS/WSS.                   | `cordova.plugins.resqpeernet.disableWSS()`                             |
 
-| Fitur                                                                 | **Full** | **Lite** |
-| --------------------------------------------------------------------- | -------- | -------- |
-| **Mesh-Hybrid (BLE + WiFi Direct + LAN mDNS + WebRTC + WS fallback)** | ✅        | ✅        |
-| **Auto-connect background**                                           | ✅        | ✅        |
-| **Emergency Mode**                                                    | ✅        | ✅        |
-| **File transfer (foto, video, audio, dokumen)**                       | ✅        | ✅        |
-| **Live streaming & screen sharing**                                   | ✅        | ✅        |
-| **Social API (post, like, komentar)**                                 | ✅        | ✅        |
-| **UMKM Marketplace API**                                              | ✅        | ✅        |
-| **Offline Maps & Nearby**                                             | ✅        | ✅        |
-| **NFC connect**                                                       | ✅        | ✅        |
-| **Telepon & SMS API (baca & kirim SMS, panggil & terima panggilan)**  | ✅        | ❌        |
-| **Akses kontak & riwayat panggilan**                                  | ✅        | ❌        |
-| **Kompatibilitas Android 5+**                                         | ✅        | ✅        |
-| **Cordova + Browser + Electron support**                              | ✅        | ✅        |
-
-
 ## Logging & Monitoring
 
 | API         | Tipe   | Deskripsi                       | Contoh                                                       |
