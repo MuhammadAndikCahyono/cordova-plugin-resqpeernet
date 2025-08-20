@@ -47,7 +47,7 @@
   ]
 }
 ```
-### Produk (UMKM Markerplace)
+### Product (Marketplace)
 ```json
 {
   "prodId": "uuid-v4",
@@ -74,4 +74,17 @@
 }
 
 ```
+### Navigator / Map Data
+```jason
+{
+  "nid": "uuid-v4",
+  "author": "uid",
+  "type": "poi | route | track",
+  "name": "Safe Point",
+  "description": "Emergency shelter",
+  "location": {"lat": -6.2, "lng": 106.8},
+  "mediaUrl": null,
+  "timestamp": 1713458500
+}
 
+```
