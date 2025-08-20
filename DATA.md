@@ -24,3 +24,54 @@
 }
 
 ```
+### Post (Sosial / Feed)
+```json
+{
+  "pid": "uuid-v4",
+  "author": "uid",
+  "type": "text | image | video | audio",
+  "caption": "Check this out!",
+  "mediaUrl": "file://path or magnet://hash",
+  "timestamp": 1713458000,
+  "likes": [
+    {"uid": "user1", "time": 1713458100}
+  ],
+  "comments": [
+    {
+      "cid": "uuid-v4",
+      "author": "uid",
+      "text": "Nice post!",
+      "mediaUrl": null,
+      "timestamp": 1713458200
+    }
+  ]
+}
+```
+### Produk (UMKM Markerplace)
+```json
+{
+  "prodId": "uuid-v4",
+  "seller": "uid",
+  "name": "Coffee Beans 250g",
+  "description": "Fresh roasted coffee",
+  "price": 50000,
+  "currency": "IDR",
+  "stock": 20,
+  "mediaUrl": ["file://img1.png", "file://img2.png"],
+  "timestamp": 1713458300
+}
+```
+### Emergency Alert
+```json
+{
+  "eid": "uuid-v4",
+  "from": "uid",
+  "type": "sos | info | supply | location",
+  "message": "Need water supply!",
+  "location": {"lat": -6.2, "lng": 106.8},
+  "timestamp": 1713458400,
+  "priority": "high | medium | low"
+}
+
+```
+
