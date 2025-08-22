@@ -1,44 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-resqpeernet" version="1.0.0">
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-resqpeernet"
+        version="1.0.0">
 
-  <name>ResQPeerNet</name>
-    <description>P2P & Mesh Networking plugin for Cordova (Emergency-ready)</description>
-    <license>Apache-2.0</license>
-    <keywords>cordova, p2p, mesh, bluetooth, wifi, webrtc, websocket, emergency</keywords>
-    <repo>https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet</repo>
-    <issue>https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet/issues</issue>
+  <name>ResqPeerNet</name>
+  <description>P2P mesh plugin for disaster-ready networking (Wi-Fi Direct, BLE, mDNS, Hybrid)</description>
+  <license>Apache 2.0</license>
+  <keywords>cordova,plugin,p2p,mesh,rescue,offline</keywords>
+  <js-module src="www/resqpeernet.js" name="ResqPeerNet">
+    <clobbers target="window.ResqPeerNet" />
+  </js-module>
 
-    <!-- Support Cordova engines -->
-    <engines>
-        <engine name="cordova" version=">=10.0.0"/>
-        <engine name="cordova-android" version=">=9.0.0"/>
-        <engine name="cordova-ios" version=">=6.2.0"/>
-    </engines>
+  <platform name="android">
+    <!-- Permissions -->
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.BLUETOOTH" />
+      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+      <!-- Android 12+ -->
+      <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:required="false"/>
+      <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:required="false"/>
+      <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:required="false"/>
+      <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    </config-file>
 
-    <!-- JS Module -->
-    <js-module src="www/resqpeernet.js" name="ResQPeerNet">
-        <clobbers target="resqpeernet"/>
-    </js-module>
+    <!-- Service/feature declarations -->
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <uses-feature android:name="android.hardware.wifi.direct" android:required="false"/>
+      <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+    </config-file>
 
-    <!-- Android -->
-    <platform name="android">
-        <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="ResQPeerNet">
-                <param name="android-package" value="org.apache.cordova.resqpeernet.ResqPeerNet"/>
-            </feature>
-        </config-file>
-
-        <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet"/>
-    </platform>
-
-    <!-- iOS -->
-    <platform name="ios">
-        <config-file target="config.xml" parent="/*">
-            <feature name="ResQPeerNet">
-                <param name="ios-package" value="ResqPeerNet"/>
-            </feature>
-        </config-file>
-
-        <source-file src="src/ios/ResqPeerNet.m" />
-    </platform>
+    <!-- Source files -->
+    <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet" />
+    <source-file src="src/android/WiFiDirectBroadcastReceiver.java" target-dir="src/org/apache/cordova/resqpeernet" />
+  </platform>
 </plugin>

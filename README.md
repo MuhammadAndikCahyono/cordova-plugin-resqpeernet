@@ -13,8 +13,6 @@ cordova-plugin-resqpeernet/
 ├── plugin.xml
 ├── package.json
 ├── README.md
-├── SECURITY.md
-├── API_REFERENCE.md
 │
 ├── www/
 │   └── resqpeernet.js        # runtime
@@ -24,9 +22,7 @@ cordova-plugin-resqpeernet/
 │   │   └── resqpeernet.js    # developer
 │   ├── android/
 │   │   └── ResqPeerNet.java  # native Android
-│   └── ios/
-│       └── ResqPeerNet.m     # native iOS
-│
+├── examples/
 └── docs/
     ├── INSTALL.md
     ├── USAGE.md
