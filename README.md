@@ -33,6 +33,7 @@ cordova-plugin-resqpeernet/
 ## Installation
 
 ```bash
-cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet
+cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet.git
 ```
+
 
