@@ -1,1 +1,34 @@
 
+{
+    "name": "cordova-plugin-resqpeernet",
+    "version": "1.0.0",
+    "description": "P2P & Mesh Networking plugin for Cordova",
+    "cordova": {
+        "id": "cordova-plugin-resqpeernet",
+        "platforms": [
+            "android"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet.git"
+    },
+    "keywords": [
+    "cordova",
+    "plugin",
+    "android",
+    "ble",
+    "wifi-direct",
+    "mdns",
+    "mesh"
+  ],
+    "author": {
+        "name": "Muhammad Andik Cahyono",
+        "url": "https://github.com/MuhammadAndikCahyono"
+    },
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet/issues"
+    },
+    "homepage": "https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet"
+}
