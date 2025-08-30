@@ -29,14 +29,16 @@
       <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     </config-file>
 
-    <!-- Service/feature declarations -->
-    <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <uses-feature android:name="android.hardware.wifi.direct" android:required="false"/>
-      <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
-    </config-file>
+   <!-- Service/feature declarations -->
+<config-file target="AndroidManifest.xml" parent="/manifest">
+  <uses-feature android:name="android.hardware.wifi.direct" android:required="false"/>
+  <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+</config-file>
+
 
     <!-- Source files -->
     <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet" />
     <source-file src="src/android/WiFiDirectBroadcastReceiver.java" target-dir="src/org/apache/cordova/resqpeernet" />
   </platform>
 </plugin>
+
