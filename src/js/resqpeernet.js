@@ -173,7 +173,36 @@ var ResqPeerNet = {
 
     webtorrentRequestPiece: function (peerId, pieceIndex, success, error) {
         this._exec("webtorrentRequestPiece", [peerId, pieceIndex], success, error);
+    },
+	
+	// -------------------
+    // Wallpaper Bridge
+    // -------------------
+	
+    /**
+     * Ambil wallpaper saat ini (Base64 PNG string).
+     * @param {Function} success dipanggil dengan string base64
+     * @param {Function} error dipanggil kalau gagal
+     */
+    getWallpaper: function(success, error) {
+        this._exec("getWallpaper", [], success, error);
+    },
+
+    /**
+     * Dengarkan event perubahan wallpaper.
+     * Callback akan dipanggil dengan base64 string wallpaper baru
+     * setiap kali user mengganti wallpaper.
+     *
+     * @param {Function} callback dipanggil tiap event {type:"wallpaperChanged", data:"<base64>"}
+     */
+    listenWallpaperChanged: function(callback) {
+        this.on("wallpaperChanged", callback);
+        this._exec("listenWallpaperChanged", [], null, function(err) {
+            console.error("listenWallpaperChanged error:", err);
+        });
     }
+
+	
 };
 
 // Daftarkan ke global window
