@@ -36,11 +36,23 @@
   <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
 </config-file>
 
+    <!-- Dependensi lokal JAR -->
+    <lib-file src="libs/google-webrtc-1.0.32006.jar" />
 
+    <!-- JmDNS (kalau juga taruh JAR di libs) -->
+    <lib-file src="libs/jmdns-3.5.5.jar" />
+
+    <!-- Native libraries WebRTC -->
+    <source-file src="libs/jni/armeabi-v7a/libjingle_peerconnection_so.so" target-dir="jni/armeabi-v7a" />
+    <source-file src="libs/jni/arm64-v8a/libjingle_peerconnection_so.so" target-dir="jni/arm64-v8a" />
+    <source-file src="libs/jni/x86/libjingle_peerconnection_so.so" target-dir="jni/x86" />
+    <source-file src="libs/jni/x86_64/libjingle_peerconnection_so.so" target-dir="jni/x86_64" />
+          
     <!-- Source files -->
     <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet" />
     <source-file src="src/android/WiFiDirectBroadcastReceiver.java" target-dir="src/org/apache/cordova/resqpeernet" />
   </platform>
 </plugin>
+
 
 
