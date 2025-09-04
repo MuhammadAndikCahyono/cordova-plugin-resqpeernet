@@ -27,6 +27,7 @@
       <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:required="false"/>
       <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:required="false"/>
       <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     </config-file>
 
    <!-- Service/feature declarations -->
@@ -41,4 +42,5 @@
     <source-file src="src/android/WiFiDirectBroadcastReceiver.java" target-dir="src/org/apache/cordova/resqpeernet" />
   </platform>
 </plugin>
+
 
