@@ -337,7 +337,16 @@ public class ResqPeerNet extends CordovaPlugin implements
                 sendEvent("onWebTorrentClientStopped", (JSONObject) null);
                 cb.success("WebTorrent bridge stopped");
                 return true;
+				
+            // --- Wallpaper bridge actions ---
+			case "getWallpaper":
+				getWallpaper(cb);
+				return true;
 
+			case "listenWallpaperChanged":
+				listenWallpaperChanged(cb);
+				return true; 
+			
             default:
                 return false;
         }
@@ -1181,19 +1190,7 @@ public class ResqPeerNet extends CordovaPlugin implements
 	
 	private CallbackContext wallpaperChangedCallback;
 
-    @Override
-    public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        if ("getWallpaper".equals(action)) {
-            getWallpaper(callbackContext);
-            return true;
-        } else if ("listenWallpaperChanged".equals(action)) {
-            listenWallpaperChanged(callbackContext);
-            return true;
-        }
-        // TODO: aksi lain plugin kamu (connect, discoverPeers, dll.)
-        return false;
-    }
-
+    
     private void getWallpaper(final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
             @Override
