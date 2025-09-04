@@ -16,7 +16,14 @@ cordova-plugin-resqpeernet/
 │
 ├── www/
 │   └── resqpeernet.js        # runtime
-│
+└── libs/
+│     ├── google-webrtc-1.0.32006.jar
+│     ├── jmdns-3.5.5.jar
+│     └── jni/
+│          ├── armeabi-v7a/libjingle_peerconnection_so.so
+│          ├── arm64-v8a/libjingle_peerconnection_so.so
+│          ├── x86/libjingle_peerconnection_so.so
+│          └── x86_64/libjingle_peerconnection_so.so
 ├── src/
 │   ├── js/
 │   │   └── resqpeernet.js    # developer
@@ -35,5 +42,6 @@ cordova-plugin-resqpeernet/
 ```bash
 cordova plugin add https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet.git
 ```
+
 
 
