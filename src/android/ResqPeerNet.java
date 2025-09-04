@@ -185,6 +185,7 @@ public class ResqPeerNet extends CordovaPlugin implements
         super.onDestroy();
         try {
             if (receiver != null) cordova.getActivity().unregisterReceiver(receiver);
+			cordova.getActivity().unregisterReceiver(wallpaperReceiver);
         } catch (Exception ignore) {}
 
         // Tutup semua resource
@@ -1267,14 +1268,5 @@ public class ResqPeerNet extends CordovaPlugin implements
             }
         }
     };
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        try {
-            cordova.getActivity().unregisterReceiver(wallpaperReceiver);
-        } catch (Exception ignored) {}
-    }
-	
 	
 }
