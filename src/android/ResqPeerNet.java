@@ -185,7 +185,7 @@ public class ResqPeerNet extends CordovaPlugin implements
         super.onDestroy();
         try {
             if (receiver != null) cordova.getActivity().unregisterReceiver(receiver);
-			cordova.getActivity().unregisterReceiver(wallpaperReceiver);
+			
         } catch (Exception ignore) {}
 
         // Tutup semua resource
@@ -338,15 +338,6 @@ public class ResqPeerNet extends CordovaPlugin implements
                 cb.success("WebTorrent bridge stopped");
                 return true;
 				
-            // --- Wallpaper bridge actions ---
-			case "getWallpaper":
-				getWallpaper(cb);
-				return true;
-
-			case "listenWallpaperChanged":
-				listenWallpaperChanged(cb);
-				return true; 
-			
             default:
                 return false;
         }
@@ -1183,87 +1174,5 @@ public class ResqPeerNet extends CordovaPlugin implements
         return InetAddress.getByAddress(bytes);
     }
 	
-	
-    // =========================================================
-    // WallpaperManager
-    // =========================================================
-	
-	private CallbackContext wallpaperChangedCallback;
-
-    
-    private void getWallpaper(final CallbackContext callbackContext) {
-        cordova.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    WallpaperManager wm = WallpaperManager.getInstance(cordova.getActivity().getApplicationContext());
-                    Drawable d = wm.getDrawable();
-                    Bitmap bmp = ((BitmapDrawable) d).getBitmap();
-
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] bytes = baos.toByteArray();
-                    String base64 = Base64.encodeToString(bytes, Base64.NO_WRAP);
-
-                    callbackContext.success(base64);
-                } catch (Exception e) {
-                    callbackContext.error("Failed to get wallpaper: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    private void listenWallpaperChanged(final CallbackContext callbackContext) {
-        this.wallpaperChangedCallback = callbackContext;
-
-        // register broadcast receiver
-        IntentFilter filter = new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED);
-        cordova.getActivity().registerReceiver(wallpaperReceiver, filter);
-
-        // kirim initial NO_RESULT untuk keep callback
-        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-        result.setKeepCallback(true);
-        callbackContext.sendPluginResult(result);
-    }
-
-    private final BroadcastReceiver wallpaperReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_WALLPAPER_CHANGED.equals(intent.getAction())) {
-                try {
-                    WallpaperManager wm = WallpaperManager.getInstance(context);
-                    Drawable d = wm.getDrawable();
-                    Bitmap bmp = ((BitmapDrawable) d).getBitmap();
-
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] bytes = baos.toByteArray();
-                    String base64 = Base64.encodeToString(bytes, Base64.NO_WRAP);
-
-                    if (wallpaperChangedCallback != null) {
-                        JSONObject evt = new JSONObject();
-                        evt.put("type", "wallpaperChanged");
-                        evt.put("data", base64);
-
-                        PluginResult result = new PluginResult(PluginResult.Status.OK, evt);
-                        result.setKeepCallback(true);
-                        wallpaperChangedCallback.sendPluginResult(result);
-                    }
-                } catch (Exception e) {
-                    if (wallpaperChangedCallback != null) {
-                        JSONObject evt = new JSONObject();
-                        try {
-                            evt.put("type", "wallpaperChanged");
-                            evt.put("data", "");
-                        } catch (JSONException ignore) {}
-
-                        PluginResult result = new PluginResult(PluginResult.Status.ERROR, evt);
-                        result.setKeepCallback(true);
-                        wallpaperChangedCallback.sendPluginResult(result);
-                    }
-                }
-            }
-        }
-    };
-	
+		
 }
