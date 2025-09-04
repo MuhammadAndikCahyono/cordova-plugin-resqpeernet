@@ -39,7 +39,7 @@
     <!-- Dependensi lokal JAR -->
     <lib-file src="libs/google-webrtc-1.0.32006.jar" />
 
-    <!-- JmDNS (kalau juga taruh JAR di libs) -->
+    <!-- JmDNS  -->
     <lib-file src="libs/jmdns-3.5.5.jar" />
 
     <!-- Native libraries WebRTC -->
@@ -53,6 +53,7 @@
     <source-file src="src/android/WiFiDirectBroadcastReceiver.java" target-dir="src/org/apache/cordova/resqpeernet" />
   </platform>
 </plugin>
+
 
 
 
