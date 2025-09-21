@@ -6,7 +6,8 @@
     "cordova": {
         "id": "cordova-plugin-resqpeernet",
         "platforms": [
-            "android"
+            "android",
+            "browser"
         ]
     },
     "repository": {
