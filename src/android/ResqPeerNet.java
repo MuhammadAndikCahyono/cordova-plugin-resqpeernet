@@ -1,4 +1,4 @@
-package org.apache.cordova.resqpeernet;
+package com.muhammadandikcahyono.resqpeernet;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaInterface;
@@ -27,21 +27,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import org.apache.cordova.resqpeernet.modules.WallpaperManagerBridge;
-import org.apache.cordova.resqpeernet.modules.PermissionManager;
-import org.apache.cordova.resqpeernet.modules.NetworkManagerBridge;
-import org.apache.cordova.resqpeernet.modules.PeerNetworkingBridge;
-import org.apache.cordova.resqpeernet.modules.BluetoothMeshManager;
-import org.apache.cordova.resqpeernet.modules.DeviceManagerBridge;
-import org.apache.cordova.resqpeernet.modules.MediaManagerBridge;
-import org.apache.cordova.resqpeernet.modules.LocationManagerBridge;
-import org.apache.cordova.resqpeernet.modules.DisplayManagerBridge;
-import org.apache.cordova.resqpeernet.modules.AppDiscoveryManagerBridge;
-import org.apache.cordova.resqpeernet.modules.WifiMeshManager;
-import org.apache.cordova.resqpeernet.modules.LocalNetworkMeshManager;
-import org.apache.cordova.resqpeernet.modules.AutoLocalMeshManager;
-import org.apache.cordova.resqpeernet.modules.MeshHybridManager;
-import org.apache.cordova.resqpeernet.modules.FileManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.WallpaperManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.PermissionManager;
+import com.muhammadandikcahyono.resqpeernet.modules.NetworkManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.BluetoothMeshManager;
+import com.muhammadandikcahyono.resqpeernet.modules.AutoLocalMeshManager;
+import com.muhammadandikcahyono.resqpeernet.modules.DeviceManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.MediaManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.LocationManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.DisplayManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.AppDiscoveryManagerBridge;
+import com.muhammadandikcahyono.resqpeernet.modules.FileManagerBridge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,17 +54,13 @@ public class ResqPeerNet extends CordovaPlugin {
     private WallpaperManagerBridge wallpaperBridge;
     private PermissionManager permissionManager;
     private NetworkManagerBridge networkBridge;
-    private PeerNetworkingBridge peerNetworkingBridge;
-    private BluetoothMeshManager bluetoothMeshManager;
+	private BluetoothMeshManager bluetoothMeshManager;
+	private AutoLocalMeshManager autoLocalMeshManager;
     private DeviceManagerBridge deviceManagerBridge;
     private MediaManagerBridge mediaManagerBridge;
     private LocationManagerBridge locationManagerBridge;
 	private DisplayManagerBridge displayManagerBridge;
 	private AppDiscoveryManagerBridge appDiscoveryBridge;
-    private WifiMeshManager wifiMeshManager;
-	private LocalNetworkMeshManager localNetworkMeshManager;
-    private AutoLocalMeshManager autoLocalMeshManager;
-	private MeshHybridManager meshHybridManager;
     private FileManagerBridge fileManagerBridge;
 	
 	public class PluginConstants {
@@ -148,6 +140,15 @@ public class ResqPeerNet extends CordovaPlugin {
                     cordova.requestPermissions(ResqPeerNet.this, requestId, permissions);
                 }
             });
+			
+			
+			// Initialize Bluetooth Mesh Manager
+			bluetoothMeshManager = new BluetoothMeshManager(cordova.getContext());
+			Log.i(TAG, "BluetoothMeshManager initialized successfully");
+			
+			// Initialize Local Mesh Manager
+			autoLocalMeshManager = new AutoLocalMeshManager(cordova.getContext());
+			Log.i(TAG, "AutoLocalMeshManager initialized successfully");
 
             // Initialize Wallpaper Manager Bridge
             wallpaperBridge = new WallpaperManagerBridge(
@@ -163,17 +164,11 @@ public class ResqPeerNet extends CordovaPlugin {
             
             networkBridge = new NetworkManagerBridge(cordova.getContext());
             Log.i(TAG, "NetworkManagerBridge initialized successfully");
-            
-            peerNetworkingBridge = new PeerNetworkingBridge(cordova.getContext());
-            Log.i(TAG, "PeerNetworkingBridge (Bluetooth) initialized successfully");
-            
+  
             // Initialize Media Manager Bridge
             mediaManagerBridge = new MediaManagerBridge(cordova, webView, mediaCallback);
             Log.i(TAG, "MediaManagerBridge initialized successfully");
-            
-            bluetoothMeshManager = new BluetoothMeshManager(cordova.getContext());
-            Log.i(TAG, "BluetoothMeshManager initialized successfully");
-            
+
             deviceManagerBridge = new DeviceManagerBridge(cordova.getContext());
             Log.i(TAG, "DeviceManagerBridge initialized successfully");
 			
@@ -225,308 +220,6 @@ public class ResqPeerNet extends CordovaPlugin {
 			);
 			Log.i(TAG, "AppDiscoveryManagerBridge initialized successfully");
 
-            // Initialize WiFi Mesh Manager
-            wifiMeshManager = new WifiMeshManager(cordova.getContext());
-            wifiMeshManager.setMeshCallback(new WifiMeshManager.WifiMeshCallback() {
-                @Override
-                public void onPeersDiscovered(List<WifiP2pDevice> peers) {
-                    try {
-                        JSONArray peersArray = new JSONArray();
-                        for (WifiP2pDevice device : peers) {
-                            JSONObject peer = new JSONObject();
-                            peer.put("deviceName", device.deviceName);
-                            peer.put("deviceAddress", device.deviceAddress);
-                            peer.put("status", getWifiDeviceStatus(device.status));
-                            peersArray.put(peer);
-                        }
-                        
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("peers", peersArray);
-                        sendEventToJavaScript("wifi_mesh_peers_discovered", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating peers event", e);
-                    }
-                }
-                
-                @Override
-                public void onConnectionEstablished(WifiP2pInfo info) {
-                    try {
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("groupFormed", info.groupFormed);
-                        eventData.put("isGroupOwner", info.isGroupOwner);
-                        eventData.put("groupOwnerAddress", info.groupOwnerAddress.getHostAddress());
-                        sendEventToJavaScript("wifi_mesh_connected", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating connection event", e);
-                    }
-                }
-                
-                @Override
-                public void onConnectionLost() {
-                    sendEventToJavaScript("wifi_mesh_disconnected", new JSONObject());
-                }
-                
-                @Override
-                public void onMessageReceived(String fromAddress, String message) {
-                    try {
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("from", fromAddress);
-                        eventData.put("message", message);
-                        eventData.put("timestamp", System.currentTimeMillis());
-                        sendEventToJavaScript("wifi_mesh_message", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating message event", e);
-                    }
-                }
-                
-                @Override
-                public void onGroupCreated(boolean isOwner) {
-                    try {
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("isGroupOwner", isOwner);
-                        sendEventToJavaScript("wifi_mesh_group_created", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating group event", e);
-                    }
-                }
-            });
-            
-            Log.i(TAG, "WifiMeshManager initialized successfully");
-
-			// Initialize Local Network Mesh Manager
-			localNetworkMeshManager = new LocalNetworkMeshManager(cordova.getContext());
-			localNetworkMeshManager.setMeshCallback(new LocalNetworkMeshManager.LocalMeshCallback() {
-				@Override
-				public void onPeerDiscovered(String peerIp, String peerName) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("ipAddress", peerIp);
-						eventData.put("name", peerName);
-						sendEventToJavaScript("local_mesh_peer_discovered", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating peer discovered event", e);
-					}
-				}
-				
-				@Override
-				public void onPeerConnected(String peerIp) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("ipAddress", peerIp);
-						sendEventToJavaScript("local_mesh_peer_connected", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating peer connected event", e);
-					}
-				}
-				
-				@Override
-				public void onPeerDisconnected(String peerIp) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("ipAddress", peerIp);
-						sendEventToJavaScript("local_mesh_peer_disconnected", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating peer disconnected event", e);
-					}
-				}
-				
-				@Override
-				public void onMessageReceived(String fromIp, String message) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("from", fromIp);
-						eventData.put("message", message);
-						eventData.put("timestamp", System.currentTimeMillis());
-						sendEventToJavaScript("local_mesh_message", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating message event", e);
-					}
-				}
-				
-				@Override
-				public void onNetworkStatusChanged(boolean isConnected) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("isConnected", isConnected);
-						
-						// ? SEKARANG BISA AKSES karena method sudah public
-						eventData.put("ssid", localNetworkMeshManager.getCurrentSSID());
-						
-						sendEventToJavaScript("local_mesh_network_status", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating network status event", e);
-					}
-				}
-			});
-			
-			Log.i(TAG, "LocalNetworkMeshManager initialized successfully");
-
-            // Initialize Auto Local Mesh Manager
-            autoLocalMeshManager = new AutoLocalMeshManager(cordova.getContext());
-            autoLocalMeshManager.setMeshCallback(new AutoLocalMeshManager.AutoMeshCallback() {
-                @Override
-                public void onMeshNodeJoined(String nodeIp, String nodeInfo) {
-                    try {
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("nodeIp", nodeIp);
-                        eventData.put("nodeInfo", nodeInfo);
-                        eventData.put("timestamp", System.currentTimeMillis());
-                        sendEventToJavaScript("auto_mesh_node_joined", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating node joined event", e);
-                    }
-                }
-                
-                @Override
-                public void onMeshNodeLeft(String nodeIp) {
-                    try {
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("nodeIp", nodeIp);
-                        sendEventToJavaScript("auto_mesh_node_left", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating node left event", e);
-                    }
-                }
-                
-                @Override
-                public void onMeshMessageReceived(String fromIp, String message) {
-                    try {
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("from", fromIp);
-                        eventData.put("message", message);
-                        eventData.put("timestamp", System.currentTimeMillis());
-                        sendEventToJavaScript("auto_mesh_message", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating message event", e);
-                    }
-                }
-                
-                @Override
-                public void onMeshNetworkReady(int nodeCount) {
-                    try {
-                        JSONObject eventData = new JSONObject();
-                        eventData.put("nodeCount", nodeCount);
-                        eventData.put("status", "network_ready");
-                        sendEventToJavaScript("auto_mesh_network_ready", eventData);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error creating network ready event", e);
-                    }
-                }
-                
-                @Override
-                public void onAutoDiscoveryStarted() {
-                    sendEventToJavaScript("auto_mesh_discovery_started", new JSONObject());
-                }
-            });
-            
-            Log.i(TAG, "AutoLocalMeshManager initialized successfully");
-			
-			
-			// Initialize Mesh Hybrid Manager
-			meshHybridManager = new MeshHybridManager(cordova.getContext());
-			meshHybridManager.setHybridCallback(new MeshHybridManager.HybridMeshCallback() {
-				@Override
-				public void onHybridMeshReady(MeshHybridManager.HybridMode mode, int nodeCount) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("mode", mode.toString());
-						eventData.put("nodeCount", nodeCount);
-						eventData.put("status", "mesh_ready");
-						sendEventToJavaScript("hybrid_mesh_ready", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating mesh ready event", e);
-					}
-				}
-				
-				@Override
-				public void onHybridNodeJoined(String nodeId, String nodeInfo, String connectionType) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("nodeId", nodeId);
-						eventData.put("nodeInfo", nodeInfo);
-						eventData.put("connectionType", connectionType);
-						sendEventToJavaScript("hybrid_node_joined", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating node joined event", e);
-					}
-				}
-				
-				@Override
-				public void onHybridNodeLeft(String nodeId) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("nodeId", nodeId);
-						sendEventToJavaScript("hybrid_node_left", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating node left event", e);
-					}
-				}
-				
-				@Override
-				public void onHybridMessageReceived(String fromNode, String message, String viaTechnology) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("fromNode", fromNode);
-						eventData.put("message", message);
-						eventData.put("viaTechnology", viaTechnology);
-						eventData.put("timestamp", System.currentTimeMillis());
-						sendEventToJavaScript("hybrid_message_received", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating message received event", e);
-					}
-				}
-				
-				@Override
-				public void onHybridModeChanged(MeshHybridManager.HybridMode oldMode, MeshHybridManager.HybridMode newMode) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("oldMode", oldMode.toString());
-						eventData.put("newMode", newMode.toString());
-						sendEventToJavaScript("hybrid_mode_changed", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating mode changed event", e);
-					}
-				}
-				
-				@Override
-				public void onAutoConnectProgress(int connectedCount, int totalEstimated) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("connectedCount", connectedCount);
-						eventData.put("totalEstimated", totalEstimated);
-						eventData.put("progress", (connectedCount * 100) / Math.max(1, totalEstimated));
-						sendEventToJavaScript("hybrid_auto_connect_progress", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating auto connect progress event", e);
-					}
-				}
-				
-				@Override
-				public void onAutoConnectComplete(int totalConnected) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("totalConnected", totalConnected);
-						eventData.put("status", "auto_connect_complete");
-						sendEventToJavaScript("hybrid_auto_connect_complete", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating auto connect complete event", e);
-					}
-				}
-				
-				@Override
-				public void onHybridBridgeEstablished(String bridgeInfo) {
-					try {
-						JSONObject eventData = new JSONObject();
-						eventData.put("bridgeInfo", bridgeInfo);
-						sendEventToJavaScript("hybrid_bridge_established", eventData);
-					} catch (JSONException e) {
-						Log.e(TAG, "Error creating bridge established event", e);
-					}
-				}
-			});
-			
-			Log.i(TAG, "MeshHybridManager initialized successfully");
-
             fileManagerBridge = new FileManagerBridge(
                 cordova.getContext(),
                 new FileManagerBridge.CallbackSender() {
@@ -539,7 +232,6 @@ public class ResqPeerNet extends CordovaPlugin {
             );
             Log.i(TAG, "FileManagerBridge initialized successfully");
 
-			
             isInitialized = true;
             Log.i(TAG, "ResqPeerNet initialized successfully with all modules");
             
@@ -642,107 +334,7 @@ public class ResqPeerNet extends CordovaPlugin {
                 case "getMobileStatus":
                     getMobileStatus(callbackContext);
                     return true;
-                    
-                case "getBluetoothStatus":
-                    getBluetoothStatus(callbackContext);
-                    return true;
-                    
-                case "enableBluetooth":
-                    enableBluetooth(callbackContext);
-                    return true;
-                    
-                case "getPairedDevices":
-                    getPairedDevices(callbackContext);
-                    return true;
 
-                case "startBluetoothDiscovery":
-                    startBluetoothDiscovery(callbackContext);
-                    return true;
-                    
-                case "stopBluetoothDiscovery":
-                    stopBluetoothDiscovery(callbackContext);
-                    return true;
-
-                case "connectToBluetoothDevice":
-                    connectToBluetoothDevice(arguments, callbackContext);
-                    return true;
-                    
-                case "startBluetoothServer":
-                    startBluetoothServer(callbackContext);
-                    return true;
-                    
-                case "stopBluetoothServer":
-                    stopBluetoothServer(callbackContext);
-                    return true;
-
-                case "sendMessage":
-                    sendMessage(arguments, callbackContext);
-                    return true;
-                    
-                case "broadcastMessage":
-                    broadcastMessage(arguments, callbackContext);
-                    return true;
-
-                case "getConnectedDevices":
-                    getConnectedDevices(callbackContext);
-                    return true;
-                    
-                case "disconnectDevice":
-                    disconnectDevice(arguments, callbackContext);
-                    return true;
-                    
-                case "disconnectAllDevices":
-                    disconnectAllDevices(callbackContext);
-                    return true;
-
-                case "startDiscoveryListener":
-                    startDiscoveryListener(callbackContext);
-                    return true;
-                    
-                case "startConnectionListener":
-                    startConnectionListener(callbackContext);
-                    return true;
-                    
-                case "startMessageListener":
-                    startMessageListener(callbackContext);
-                    return true;
-                    
-                case "initializeMesh":
-                    initializeMesh(callbackContext);
-                    return true;
-                    
-                case "joinMesh":
-                    joinMesh(args, callbackContext);
-                    return true;
-                    
-                case "sendMeshMessage":
-                    sendMeshMessage(args, callbackContext);
-                    return true;
-                    
-                case "broadcastToMesh":
-                    broadcastToMesh(args, callbackContext);
-                    return true;
-                    
-                case "getMeshTopology":
-                    getMeshTopology(callbackContext);
-                    return true;
-                    
-                case "startMeshEventListener":
-                    startMeshEventListener(callbackContext);
-                    return true;
-                    
-                case "discoverMeshNodes":
-                    discoverMeshNodes(callbackContext);
-                    return true;
-                    
-                case "autoJoinMesh":
-                    autoJoinMesh(callbackContext);
-                    return true;
-                    
-                case "getAvailableGateways":
-                    getAvailableGateways(callbackContext);
-                    return true;
-                    
                 case "getDeviceInfo":
 					deviceManagerBridge.getDeviceInfo(callbackContext);
                     return true;
@@ -1000,105 +592,9 @@ public class ResqPeerNet extends CordovaPlugin {
 				case "isAppInstalled":
 					isAppInstalled(arguments, callbackContext);
 					return true;
-
-                // WiFi Mesh Methods
-                case "initializeWiFiMesh":
-                    initializeWiFiMesh(callbackContext);
-                    return true;
-                    
-                case "createWiFiMeshGroup":
-                    createWiFiMeshGroup(callbackContext);
-                    return true;
-                    
-                case "discoverWiFiPeers":
-                    discoverWiFiPeers(callbackContext);
-                    return true;
-                    
-                case "connectToWiFiDevice":
-                    connectToWiFiDevice(arguments, callbackContext);
-                    return true;
-                    
-                case "getWiFiPeers":
-                    getWiFiPeers(callbackContext);
-                    return true;
-                    
-                case "sendWiFiMeshMessage":
-                    sendWiFiMeshMessage(arguments, callbackContext);
-                    return true;
-                    
-                case "getWiFiMeshTopology":
-                    getWiFiMeshTopology(callbackContext);
-                    return true;
-                    
-                case "removeWiFiMeshGroup":
-                    removeWiFiMeshGroup(callbackContext);
-                    return true;
-					
-				// LOCAL NETWORK MESH METHODS
-				case "initializeLocalMesh":
-					initializeLocalMesh(callbackContext);
-					return true;
-					
-				case "discoverLocalPeers":
-					discoverLocalPeers(callbackContext);
-					return true;
-					
-				case "getLocalPeers":
-					getLocalPeers(callbackContext);
-					return true;
-					
-				case "autoConnectLocalPeers":
-					autoConnectLocalPeers(callbackContext);
-					return true;
-					
-				case "sendLocalMeshMessage":
-					sendLocalMeshMessage(args, callbackContext);
-					return true;
-					
-				case "getLocalMeshTopology":
-					getLocalMeshTopology(callbackContext);
-					return true;
-					
-				case "stopLocalMesh":
-					stopLocalMesh(callbackContext);
-					return true;
-				
-                 // AUTO LOCAL MESH METHODS
-                case "startAutoMesh":
-                    startAutoMesh(callbackContext);
-                    return true;
-                    
-                case "stopAutoMesh":
-                    stopAutoMesh(callbackContext);
-                    return true;
-                    
-                case "broadcastToAutoMesh":
-                    broadcastToAutoMesh(args, callbackContext);
-                    return true;
-                    
-                case "getAutoMeshStatus":
-                    getAutoMeshStatus(callbackContext);
-                    return true;
-					
-				
-				// HYBRID MESH METHODS - ONE METHOD TO RULE THEM ALL!
-				case "startHybridMesh":
-					startHybridMesh(callbackContext);
-					return true;
-					
-				case "sendHybridMessage":
-					sendHybridMessage(args, callbackContext);
-					return true;
-					
-				case "getHybridStatus":
-					getHybridStatus(callbackContext);
-					return true;
-					
-				case "stopHybridMesh":
-					stopHybridMesh(callbackContext);
-					return true;
-
-                // File Manager:
+				// =========================================================================
+				// FILE MANAGER METHODS
+				// =========================================================================
                 case "readFileAsText":
                     readFileAsText(args, callbackContext);
                     return true;
@@ -1126,7 +622,172 @@ public class ResqPeerNet extends CordovaPlugin {
                 case "getFileInfo":
                     getFileInfo(args, callbackContext);
                     return true;
-
+					
+				// =========================================================================
+				// BLUETOOTH MESH METHODS
+				// =========================================================================
+				case "BTMeshStartNetwork":
+					BTMeshStartNetwork(callbackContext);
+					return true;
+					
+				case "BTMeshStopNetwork":
+					BTMeshStopNetwork(callbackContext);
+					return true;
+					
+				case "BTMeshGetStatus":
+					BTMeshGetStatus(callbackContext);
+					return true;
+					
+				case "BTMeshStartAdvertising":
+					BTMeshStartAdvertising(callbackContext);
+					return true;
+					
+				case "BTMeshStartEnhancedAdvertising":
+					BTMeshStartEnhancedAdvertising(callbackContext);
+					return true;
+					
+				case "BTMeshStopAdvertising":
+					BTMeshStopAdvertising(callbackContext);
+					return true;
+					
+				case "BTMeshStartScanning":
+					BTMeshStartScanning(callbackContext);
+					return true;
+					
+				case "BTMeshStopScanning":
+					BTMeshStopScanning(callbackContext);
+					return true;
+					
+				case "BTMeshSendMessage":
+					BTMeshSendMessage(arguments, callbackContext);
+					return true;
+					
+				case "BTMeshBroadcastMessage":
+					BTMeshBroadcastMessage(arguments, callbackContext);
+					return true;
+					
+				case "BTMeshSendReliableMessage":
+					BTMeshSendReliableMessage(arguments, callbackContext);
+					return true;
+					
+				case "BTMeshSendAcknowledgedMessage":
+					BTMeshSendAcknowledgedMessage(arguments, callbackContext);
+					return true;
+					
+				case "BTMeshConnectDevice":
+					BTMeshConnectDevice(arguments, callbackContext);
+					return true;
+					
+				case "BTMeshDisconnectDevice":
+					BTMeshDisconnectDevice(arguments, callbackContext);
+					return true;
+					
+				case "BTMeshGetConnectedDevices":
+					BTMeshGetConnectedDevices(callbackContext);
+					return true;
+					
+				case "BTMeshIsBluetoothEnabled":
+					BTMeshIsBluetoothEnabled(callbackContext);
+					return true;
+					
+				case "BTMeshEnableBluetooth":
+					BTMeshEnableBluetooth(callbackContext);
+					return true;
+					
+				case "BTMeshGetBondedDevices":
+					BTMeshGetBondedDevices(callbackContext);
+					return true;
+					
+				case "BTMeshStartDiscovery":
+					BTMeshStartDiscovery(callbackContext);
+					return true;
+					
+				case "BTMeshCheckPermissions":
+					BTMeshCheckPermissions(callbackContext);
+					return true;
+					
+				case "BTMeshSetConfiguration":
+					BTMeshSetConfiguration(arguments, callbackContext);
+					return true;
+					
+				case "BTMeshGetConfiguration":
+					BTMeshGetConfiguration(callbackContext);
+					return true;
+					
+				case "BTMeshGetBLEStatus":
+					BTMeshGetBLEStatus(callbackContext);
+					return true;
+					
+				case "BTMeshGetPerformanceStats":
+					BTMeshGetPerformanceStats(callbackContext);
+					return true;
+					
+				case "BTMeshGetErrorLog":
+					BTMeshGetErrorLog(callbackContext);
+					return true;
+					
+				case "BTMeshResetNetwork":
+					BTMeshResetNetwork(callbackContext);
+					return true;
+					
+				// =========================================================================
+				// BLUETOOTH MESH EVENT LISTENERS
+				// =========================================================================
+				case "BTMeshStartDiscoveryListener":
+					BTMeshStartDiscoveryListener(callbackContext);
+					return true;
+					
+				case "BTMeshStartConnectionListener":
+					BTMeshStartConnectionListener(callbackContext);
+					return true;
+					
+				case "BTMeshStartMessageListener":
+					BTMeshStartMessageListener(callbackContext);
+					return true;
+					
+				case "BTMeshStartRoutingListener":
+					BTMeshStartRoutingListener(callbackContext);
+					return true;
+					
+				case "BTMeshStartAdvertisingListener":
+					BTMeshStartAdvertisingListener(callbackContext);
+					return true;
+					
+				// =========================================================================
+				// LOCAL MESH METHODS (WI-FI)
+				// =========================================================================
+				
+				case "initializeMesh":
+					initializeMesh(callbackContext);
+					return true;
+					
+				case "discoverPeers":
+					discoverPeers(callbackContext);
+					return true;
+					
+				case "getDiscoveredPeers":
+					getDiscoveredPeers(callbackContext);
+					return true;
+					
+				case "connectToPeer":
+					connectToPeer(arguments, callbackContext);
+					return true;
+					
+				case "autoConnectPeers":
+					autoConnectPeers(callbackContext);
+					return true;
+					
+				case "sendMeshMessage":
+					sendMeshMessage(arguments, callbackContext);
+					return true;
+					
+				case "getMeshTopology":
+					getMeshTopology(callbackContext);
+					return true;
+					
+				case "stopMesh":
+					stopMesh(callbackContext);
+					return true;
 
                 default:
                     Log.w(TAG, "Unknown action: " + action);
@@ -1196,7 +857,530 @@ public class ResqPeerNet extends CordovaPlugin {
 		}
 	}
 
-    // Implementasi method handlers file manager
+    
+	// =========================================================================
+	// BLUETOOTH MESH MANAGEMENT METHODS - WITH BTMesh PREFIX
+	// =========================================================================
+
+	private void BTMeshStartNetwork(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startMeshNetwork(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting mesh network", e);
+			callbackContext.error("Error starting mesh network: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStopNetwork(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.stopMeshNetwork(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error stopping mesh network", e);
+			callbackContext.error("Error stopping mesh network: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshGetStatus(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.getMeshStatus(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting mesh status", e);
+			callbackContext.error("Error getting mesh status: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// BLE ADVERTISING METHODS
+	// =========================================================================
+
+	private void BTMeshStartAdvertising(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startBLEAdvertising(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting BLE advertising", e);
+			callbackContext.error("Error starting BLE advertising: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStartEnhancedAdvertising(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startEnhancedBLEAdvertising(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting enhanced BLE advertising", e);
+			callbackContext.error("Error starting enhanced BLE advertising: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStopAdvertising(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.stopBLEAdvertising(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error stopping BLE advertising", e);
+			callbackContext.error("Error stopping BLE advertising: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// BLE SCANNING METHODS
+	// =========================================================================
+
+	private void BTMeshStartScanning(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startBLEScanning(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting BLE scanning", e);
+			callbackContext.error("Error starting BLE scanning: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStopScanning(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.stopBLEScanning(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error stopping BLE scanning", e);
+			callbackContext.error("Error stopping BLE scanning: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// MESH MESSAGING METHODS
+	// =========================================================================
+
+	private void BTMeshSendMessage(JSONObject args, CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			String destinationNodeId = args.getString("destinationNodeId");
+			String message = args.getString("message");
+			bluetoothMeshManager.sendMeshMessage(destinationNodeId, message, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error sending mesh message", e);
+			callbackContext.error("Error sending mesh message: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshBroadcastMessage(JSONObject args, CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			String message = args.getString("message");
+			bluetoothMeshManager.broadcastMeshMessage(message, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error broadcasting mesh message", e);
+			callbackContext.error("Error broadcasting mesh message: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshSendReliableMessage(JSONObject args, CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			String destinationNodeId = args.getString("destinationNodeId");
+			String message = args.getString("message");
+			int maxRetries = args.optInt("maxRetries", 3);
+			bluetoothMeshManager.sendReliableMessage(destinationNodeId, message, maxRetries, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error sending reliable message", e);
+			callbackContext.error("Error sending reliable message: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshSendAcknowledgedMessage(JSONObject args, CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			String destinationNodeId = args.getString("destinationNodeId");
+			String message = args.getString("message");
+			int timeoutMs = args.optInt("timeoutMs", 10000);
+			bluetoothMeshManager.sendAcknowledgedMessage(destinationNodeId, message, timeoutMs, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error sending acknowledged message", e);
+			callbackContext.error("Error sending acknowledged message: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// DEVICE CONNECTION METHODS
+	// =========================================================================
+
+	private void BTMeshConnectDevice(JSONObject args, CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			String deviceAddress = args.getString("deviceAddress");
+			bluetoothMeshManager.connectToBLEDevice(deviceAddress, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error connecting to BLE device", e);
+			callbackContext.error("Error connecting to BLE device: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshDisconnectDevice(JSONObject args, CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			String deviceAddress = args.getString("deviceAddress");
+			bluetoothMeshManager.disconnectBLEDevice(deviceAddress, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error disconnecting BLE device", e);
+			callbackContext.error("Error disconnecting BLE device: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshGetConnectedDevices(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.getConnectedBLEDevices(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting connected BLE devices", e);
+			callbackContext.error("Error getting connected BLE devices: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// BLUETOOTH MANAGEMENT METHODS
+	// =========================================================================
+
+	private void BTMeshIsBluetoothEnabled(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.isBluetoothEnabled(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error checking Bluetooth state", e);
+			callbackContext.error("Error checking Bluetooth state: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshEnableBluetooth(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.enableBluetooth(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error enabling Bluetooth", e);
+			callbackContext.error("Error enabling Bluetooth: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshGetBondedDevices(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.getBondedDevices(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting bonded devices", e);
+			callbackContext.error("Error getting bonded devices: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStartDiscovery(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startDiscovery(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting discovery", e);
+			callbackContext.error("Error starting discovery: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshCheckPermissions(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.checkPermissions(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error checking Bluetooth permissions", e);
+			callbackContext.error("Error checking Bluetooth permissions: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// CONFIGURATION AND STATUS METHODS
+	// =========================================================================
+
+	private void BTMeshSetConfiguration(JSONObject args, CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.setMeshConfiguration(args, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error setting mesh configuration", e);
+			callbackContext.error("Error setting mesh configuration: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshGetConfiguration(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.getMeshConfiguration(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting mesh configuration", e);
+			callbackContext.error("Error getting mesh configuration: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshGetBLEStatus(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.getBLEStatus(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting BLE status", e);
+			callbackContext.error("Error getting BLE status: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshGetPerformanceStats(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.getPerformanceStats(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting performance stats", e);
+			callbackContext.error("Error getting performance stats: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshGetErrorLog(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.getErrorLog(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting error log", e);
+			callbackContext.error("Error getting error log: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshResetNetwork(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.resetMeshNetwork(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error resetting mesh network", e);
+			callbackContext.error("Error resetting mesh network: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// EVENT LISTENER METHODS
+	// =========================================================================
+
+	private void BTMeshStartDiscoveryListener(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startMeshDiscoveryListener(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting mesh discovery listener", e);
+			callbackContext.error("Error starting mesh discovery listener: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStartConnectionListener(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startMeshConnectionListener(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting mesh connection listener", e);
+			callbackContext.error("Error starting mesh connection listener: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStartMessageListener(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startMeshMessageListener(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting mesh message listener", e);
+			callbackContext.error("Error starting mesh message listener: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStartRoutingListener(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startMeshRoutingListener(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting mesh routing listener", e);
+			callbackContext.error("Error starting mesh routing listener: " + e.getMessage());
+		}
+	}
+
+	private void BTMeshStartAdvertisingListener(CallbackContext callbackContext) {
+		try {
+			if (bluetoothMeshManager == null) {
+				callbackContext.error("Bluetooth Mesh module not available");
+				return;
+			}
+			bluetoothMeshManager.startBLEAdvertisingListener(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error starting BLE advertising listener", e);
+			callbackContext.error("Error starting BLE advertising listener: " + e.getMessage());
+		}
+	}
+
+	// =========================================================================
+	// LOCAL MESH MANAGEMENT METHODS
+	// =========================================================================
+
+	private void initializeMesh(CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.initializeMesh(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error initializing mesh", e);
+			callbackContext.error("Error initializing mesh: " + e.getMessage());
+		}
+	}
+
+	private void discoverPeers(CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.discoverPeers(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error discovering peers", e);
+			callbackContext.error("Error discovering peers: " + e.getMessage());
+		}
+	}
+
+	private void getDiscoveredPeers(CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.getDiscoveredPeers(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting discovered peers", e);
+			callbackContext.error("Error getting discovered peers: " + e.getMessage());
+		}
+	}
+
+	private void connectToPeer(JSONObject args, CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.connectToPeer(args, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error connecting to peer", e);
+			callbackContext.error("Error connecting to peer: " + e.getMessage());
+		}
+	}
+
+	private void autoConnectPeers(CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.autoConnectPeers(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error in auto-connect", e);
+			callbackContext.error("Error in auto-connect: " + e.getMessage());
+		}
+	}
+
+	private void sendMeshMessage(JSONObject args, CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.sendMeshMessage(args, callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error sending mesh message", e);
+			callbackContext.error("Error sending mesh message: " + e.getMessage());
+		}
+	}
+
+	private void getMeshTopology(CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.getMeshTopology(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting mesh topology", e);
+			callbackContext.error("Error getting mesh topology: " + e.getMessage());
+		}
+	}
+
+	private void stopMesh(CallbackContext callbackContext) {
+		try {
+			autoLocalMeshManager.stopMesh(callbackContext);
+		} catch (Exception e) {
+			Log.e(TAG, "Error stopping mesh", e);
+			callbackContext.error("Error stopping mesh: " + e.getMessage());
+		}
+	}
+
+	// Implementasi method handlers file manager
     private void readFileAsText(JSONArray args, CallbackContext callbackContext) {
         try {
             JSONObject arguments = args.getJSONObject(0);
@@ -1277,7 +1461,6 @@ public class ResqPeerNet extends CordovaPlugin {
         }
     }
 	
-
     private void listDirectory(JSONArray args, CallbackContext callbackContext) {
         try {
             Log.d(TAG, "Executing listDirectory action");
@@ -1426,7 +1609,6 @@ public class ResqPeerNet extends CordovaPlugin {
         }
     }
 
-
     private void getStorageInfo(CallbackContext callbackContext) {
         try {
             Log.d(TAG, "Executing getStorageInfo action");
@@ -1553,208 +1735,6 @@ public class ResqPeerNet extends CordovaPlugin {
             
         } catch (JSONException e) {
             Log.e(TAG, "Error sending file event", e);
-        }
-    }
-
-
-	 // Hybrid Mesh Method Implementations
-    private void startHybridMesh(CallbackContext callbackContext) {
-        try {
-            if (meshHybridManager == null) {
-                callbackContext.error("Mesh Hybrid module not available");
-                return;
-            }
-            meshHybridManager.startHybridMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting hybrid mesh", e);
-            callbackContext.error("Error starting hybrid mesh: " + e.getMessage());
-        }
-    }
-    
-    private void sendHybridMessage(JSONArray args, CallbackContext callbackContext) {
-        try {
-            if (meshHybridManager == null) {
-                callbackContext.error("Mesh Hybrid module not available");
-                return;
-            }
-            JSONObject arguments = args.getJSONObject(0);
-            meshHybridManager.sendHybridMessage(arguments, callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error sending hybrid message", e);
-            callbackContext.error("Error sending hybrid message: " + e.getMessage());
-        }
-    }
-    
-    private void getHybridStatus(CallbackContext callbackContext) {
-        try {
-            if (meshHybridManager == null) {
-                callbackContext.error("Mesh Hybrid module not available");
-                return;
-            }
-            meshHybridManager.getHybridStatus(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting hybrid status", e);
-            callbackContext.error("Error getting hybrid status: " + e.getMessage());
-        }
-    }
-    
-    private void stopHybridMesh(CallbackContext callbackContext) {
-        try {
-            if (meshHybridManager == null) {
-                callbackContext.error("Mesh Hybrid module not available");
-                return;
-            }
-            meshHybridManager.stopHybridMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error stopping hybrid mesh", e);
-            callbackContext.error("Error stopping hybrid mesh: " + e.getMessage());
-        }
-    }
-	
-	// Local Network Mesh Method Implementations
-    private void initializeLocalMesh(CallbackContext callbackContext) {
-        try {
-            if (localNetworkMeshManager == null) {
-                callbackContext.error("Local Network Mesh module not available");
-                return;
-            }
-            localNetworkMeshManager.initializeMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error initializing local mesh", e);
-            callbackContext.error("Error initializing local mesh: " + e.getMessage());
-        }
-    }
-	
-	private void discoverLocalPeers(CallbackContext callbackContext) {
-		try {
-			if (localNetworkMeshManager == null) {
-				callbackContext.error("Local Network Mesh module not available");
-				return;
-			}
-			localNetworkMeshManager.discoverPeers(callbackContext);
-		} catch (Exception e) {
-			Log.e(TAG, "Error discovering local peers", e);
-			callbackContext.error("Error discovering local peers: " + e.getMessage());
-		}
-	}
-
-	private void getLocalPeers(CallbackContext callbackContext) {
-		try {
-			if (localNetworkMeshManager == null) {
-				callbackContext.error("Local Network Mesh module not available");
-				return;
-			}
-			localNetworkMeshManager.getDiscoveredPeers(callbackContext);
-		} catch (Exception e) {
-			Log.e(TAG, "Error getting local peers", e);
-			callbackContext.error("Error getting local peers: " + e.getMessage());
-		}
-	}
-
-	private void autoConnectLocalPeers(CallbackContext callbackContext) {
-		try {
-			if (localNetworkMeshManager == null) {
-				callbackContext.error("Local Network Mesh module not available");
-				return;
-			}
-			localNetworkMeshManager.autoConnectPeers(callbackContext);
-		} catch (Exception e) {
-			Log.e(TAG, "Error auto-connecting local peers", e);
-			callbackContext.error("Error auto-connecting local peers: " + e.getMessage());
-		}
-	}
-
-	private void sendLocalMeshMessage(JSONArray args, CallbackContext callbackContext) {
-		try {
-			if (localNetworkMeshManager == null) {
-				callbackContext.error("Local Network Mesh module not available");
-				return;
-			}
-			JSONObject arguments = args.getJSONObject(0);
-			localNetworkMeshManager.sendMeshMessage(arguments, callbackContext);
-		} catch (Exception e) {
-			Log.e(TAG, "Error sending local mesh message", e);
-			callbackContext.error("Error sending local mesh message: " + e.getMessage());
-		}
-	}
-
-	private void getLocalMeshTopology(CallbackContext callbackContext) {
-		try {
-			if (localNetworkMeshManager == null) {
-				callbackContext.error("Local Network Mesh module not available");
-				return;
-			}
-			localNetworkMeshManager.getMeshTopology(callbackContext);
-		} catch (Exception e) {
-			Log.e(TAG, "Error getting local mesh topology", e);
-			callbackContext.error("Error getting local mesh topology: " + e.getMessage());
-		}
-	}
-
-	private void stopLocalMesh(CallbackContext callbackContext) {
-		try {
-			if (localNetworkMeshManager == null) {
-				callbackContext.error("Local Network Mesh module not available");
-				return;
-			}
-			localNetworkMeshManager.stopLocalMesh(callbackContext);
-		} catch (Exception e) {
-			Log.e(TAG, "Error stopping local mesh", e);
-			callbackContext.error("Error stopping local mesh: " + e.getMessage());
-		}
-	}
-
-    // Auto Mesh Method Implementations
-    private void startAutoMesh(CallbackContext callbackContext) {
-        try {
-            if (autoLocalMeshManager == null) {
-                callbackContext.error("Auto Mesh module not available");
-                return;
-            }
-            autoLocalMeshManager.startAutoMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting auto mesh", e);
-            callbackContext.error("Error starting auto mesh: " + e.getMessage());
-        }
-    }
-    
-    private void stopAutoMesh(CallbackContext callbackContext) {
-        try {
-            if (autoLocalMeshManager == null) {
-                callbackContext.error("Auto Mesh module not available");
-                return;
-            }
-            autoLocalMeshManager.stopAutoMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error stopping auto mesh", e);
-            callbackContext.error("Error stopping auto mesh: " + e.getMessage());
-        }
-    }
-    
-    private void broadcastToAutoMesh(JSONArray args, CallbackContext callbackContext) {
-        try {
-            if (autoLocalMeshManager == null) {
-                callbackContext.error("Auto Mesh module not available");
-                return;
-            }
-            JSONObject arguments = args.getJSONObject(0);
-            autoLocalMeshManager.broadcastToMesh(arguments, callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error broadcasting to auto mesh", e);
-            callbackContext.error("Error broadcasting to auto mesh: " + e.getMessage());
-        }
-    }
-    
-    private void getAutoMeshStatus(CallbackContext callbackContext) {
-        try {
-            if (autoLocalMeshManager == null) {
-                callbackContext.error("Auto Mesh module not available");
-                return;
-            }
-            autoLocalMeshManager.getMeshStatus(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting auto mesh status", e);
-            callbackContext.error("Error getting auto mesh status: " + e.getMessage());
         }
     }
 
@@ -1971,10 +1951,9 @@ public class ResqPeerNet extends CordovaPlugin {
             status.put("mediaModule", mediaManagerBridge != null ? "available" : "unavailable");
             status.put("locationModule", locationManagerBridge != null ? "available" : "unavailable");
             status.put("networkModule", networkBridge != null ? "available" : "unavailable");
-            status.put("meshModule", peerNetworkingBridge != null ? "available" : "unavailable");
-            status.put("btMeshkModule", bluetoothMeshManager != null ? "available" : "unavailable");
+			status.put("btMeshModule", bluetoothMeshManager != null ? "available" : "unavailable");
             status.put("deviceModule", deviceManagerBridge != null ? "available" : "unavailable");
-            status.put("systemMonitoring", "available"); // NEW: Phase 1 feature
+            status.put("systemMonitoring", "available"); 
             status.put("allPermissions", permissionManager != null && permissionManager.hasAllPermissions());
             status.put("timestamp", System.currentTimeMillis());
 
@@ -2307,386 +2286,6 @@ public class ResqPeerNet extends CordovaPlugin {
         } catch (Exception e) {
             Log.e(TAG, "Error getting mobile status", e);
             callbackContext.error("Error getting mobile status: " + e.getMessage());
-        }
-    }
-    
-    // =========================================================================
-    // BLUETOOTH STATUS METHODS
-    // =========================================================================
-
-    private void getBluetoothStatus(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.getBluetoothStatus(callbackContext);
-            Log.d(TAG, "getBluetoothStatus executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting Bluetooth status", e);
-            callbackContext.error("Error getting Bluetooth status: " + e.getMessage());
-        }
-    }
-
-    private void enableBluetooth(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-
-            peerNetworkingBridge.enableBluetooth(callbackContext);
-            Log.d(TAG, "enableBluetooth executed");
-
-        } catch (Exception e) {
-            Log.e(TAG, "Error enabling Bluetooth", e);
-            callbackContext.error("Error enabling Bluetooth: " + e.getMessage());
-        }
-    }
-
-    private void getPairedDevices(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.getPairedDevices(callbackContext);
-            Log.d(TAG, "getPairedDevices executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting paired devices", e);
-            callbackContext.error("Error getting paired devices: " + e.getMessage());
-        }
-    }
-
-    // =========================================================================
-    // BLUETOOTH DISCOVERY METHODS
-    // =========================================================================
-
-    private void startBluetoothDiscovery(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.startBluetoothDiscovery(callbackContext);
-            Log.d(TAG, "startBluetoothDiscovery executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting Bluetooth discovery", e);
-            callbackContext.error("Error starting Bluetooth discovery: " + e.getMessage());
-        }
-    }
-
-    private void stopBluetoothDiscovery(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.stopBluetoothDiscovery(callbackContext);
-            Log.d(TAG, "stopBluetoothDiscovery executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error stopping Bluetooth discovery", e);
-            callbackContext.error("Error stopping Bluetooth discovery: " + e.getMessage());
-        }
-    }
-
-    // =========================================================================
-    // BLUETOOTH CONNECTION METHODS
-    // =========================================================================
-
-    private void connectToBluetoothDevice(JSONObject args, CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            String deviceAddress = args.getString("deviceAddress");
-            peerNetworkingBridge.connectToBluetoothDevice(deviceAddress, callbackContext);
-            Log.d(TAG, "connectToBluetoothDevice executed for: " + deviceAddress);
-        } catch (Exception e) {
-            Log.e(TAG, "Error connecting to Bluetooth device", e);
-            callbackContext.error("Error connecting to Bluetooth device: " + e.getMessage());
-        }
-    }
-
-    private void startBluetoothServer(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.startBluetoothServer(callbackContext);
-            Log.d(TAG, "startBluetoothServer executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting Bluetooth server", e);
-            callbackContext.error("Error starting Bluetooth server: " + e.getMessage());
-        }
-    }
-
-    private void stopBluetoothServer(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.stopBluetoothServer(callbackContext);
-            Log.d(TAG, "stopBluetoothServer executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error stopping Bluetooth server", e);
-            callbackContext.error("Error stopping Bluetooth server: " + e.getMessage());
-        }
-    }
-
-    // =========================================================================
-    // MESSAGING METHODS
-    // =========================================================================
-
-    private void sendMessage(JSONObject args, CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            String deviceId = args.getString("deviceId");
-            String message = args.getString("message");
-            peerNetworkingBridge.sendMessage(deviceId, message, callbackContext);
-            Log.d(TAG, "sendMessage executed to: " + deviceId);
-        } catch (Exception e) {
-            Log.e(TAG, "Error sending message", e);
-            callbackContext.error("Error sending message: " + e.getMessage());
-        }
-    }
-
-    private void broadcastMessage(JSONObject args, CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            String message = args.getString("message");
-            peerNetworkingBridge.broadcastMessage(message, callbackContext);
-            Log.d(TAG, "broadcastMessage executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error broadcasting message", e);
-            callbackContext.error("Error broadcasting message: " + e.getMessage());
-        }
-    }
-
-    // =========================================================================
-    // MANAGEMENT METHODS
-    // =========================================================================
-
-    private void getConnectedDevices(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.getConnectedDevices(callbackContext);
-            Log.d(TAG, "getConnectedDevices executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting connected devices", e);
-            callbackContext.error("Error getting connected devices: " + e.getMessage());
-        }
-    }
-
-    private void disconnectDevice(JSONObject args, CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            String deviceId = args.getString("deviceId");
-            peerNetworkingBridge.disconnectDevice(deviceId, callbackContext);
-            Log.d(TAG, "disconnectDevice executed for: " + deviceId);
-        } catch (Exception e) {
-            Log.e(TAG, "Error disconnecting device", e);
-            callbackContext.error("Error disconnecting device: " + e.getMessage());
-        }
-    }
-
-    private void disconnectAllDevices(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.disconnectAllDevices(callbackContext);
-            Log.d(TAG, "disconnectAllDevices executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error disconnecting all devices", e);
-            callbackContext.error("Error disconnecting all devices: " + e.getMessage());
-        }
-    }
-
-    // =========================================================================
-    // EVENT LISTENERS
-    // =========================================================================
-
-    private void startDiscoveryListener(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.startDiscoveryListener(callbackContext);
-            Log.d(TAG, "startDiscoveryListener executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting discovery listener", e);
-            callbackContext.error("Error starting discovery listener: " + e.getMessage());
-        }
-    }
-
-    private void startConnectionListener(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.startConnectionListener(callbackContext);
-            Log.d(TAG, "startConnectionListener executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting connection listener", e);
-            callbackContext.error("Error starting connection listener: " + e.getMessage());
-        }
-    }
-
-    private void startMessageListener(CallbackContext callbackContext) {
-        try {
-            if (peerNetworkingBridge == null) {
-                callbackContext.error("P2P Networking module not available");
-                return;
-            }
-            peerNetworkingBridge.startMessageListener(callbackContext);
-            Log.d(TAG, "startMessageListener executed");
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting message listener", e);
-            callbackContext.error("Error starting message listener: " + e.getMessage());
-        }
-    }
-    
-    // Method implementations untuk Mesh
-    private void initializeMesh(CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            bluetoothMeshManager.initializeMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error initializing mesh", e);
-            callbackContext.error("Error initializing mesh: " + e.getMessage());
-        }
-    }
-
-    private void joinMesh(JSONArray args, CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            JSONObject arguments = args.getJSONObject(0);
-            String gatewayNodeId = arguments.getString("gatewayNodeId");
-            bluetoothMeshManager.joinMesh(gatewayNodeId, callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error joining mesh", e);
-            callbackContext.error("Error joining mesh: " + e.getMessage());
-        }
-    }
-
-    private void sendMeshMessage(JSONArray args, CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            JSONObject arguments = args.getJSONObject(0);
-            String targetNodeId = arguments.getString("targetNodeId");
-            String message = arguments.getString("message");
-            bluetoothMeshManager.sendMeshMessage(targetNodeId, message, callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error sending mesh message", e);
-            callbackContext.error("Error sending mesh message: " + e.getMessage());
-        }
-    }
-
-    private void broadcastToMesh(JSONArray args, CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            JSONObject arguments = args.getJSONObject(0);
-            String message = arguments.getString("message");
-            bluetoothMeshManager.broadcastToMesh(args, callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error broadcasting to mesh", e);
-            callbackContext.error("Error broadcasting to mesh: " + e.getMessage());
-        }
-    }
-
-    private void getMeshTopology(CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            bluetoothMeshManager.getMeshTopology(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting mesh topology", e);
-            callbackContext.error("Error getting mesh topology: " + e.getMessage());
-        }
-    }
-
-    private void startMeshEventListener(CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            bluetoothMeshManager.startMeshEventListener(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting mesh event listener", e);
-            callbackContext.error("Error starting mesh event listener: " + e.getMessage());
-        }
-    }
-
-    private void discoverMeshNodes(CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            bluetoothMeshManager.discoverMeshNodes(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error discovering mesh nodes", e);
-            callbackContext.error("Error discovering mesh nodes: " + e.getMessage());
-        }
-    }
-
-    private void autoJoinMesh(CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            bluetoothMeshManager.autoJoinMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error auto-joining mesh", e);
-            callbackContext.error("Error auto-joining mesh: " + e.getMessage());
-        }
-    }
-
-    private void getAvailableGateways(CallbackContext callbackContext) {
-        try {
-            if (bluetoothMeshManager == null) {
-                callbackContext.error("Mesh module not available");
-                return;
-            }
-            bluetoothMeshManager.getAvailableGateways(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting available gateways", e);
-            callbackContext.error("Error getting available gateways: " + e.getMessage());
         }
     }
 
@@ -3057,9 +2656,6 @@ public class ResqPeerNet extends CordovaPlugin {
 		}
 	}
 
-
-
-
     private void getCurrentLocation(JSONObject args, CallbackContext callbackContext) {
         try {
             if (locationManagerBridge == null) {
@@ -3138,10 +2734,10 @@ public class ResqPeerNet extends CordovaPlugin {
         }
     }
 
-     /**
-     * Get comprehensive system resources information
-     * Includes: Memory, CPU, Storage, Thermal status
-     */
+    /**
+    * Get comprehensive system resources information
+    * Includes: Memory, CPU, Storage, Thermal status
+    */
     private void getSystemResources(CallbackContext callbackContext) {
         try {
             Log.d(TAG, "Getting system resources via DeviceManagerBridge");
@@ -3202,7 +2798,6 @@ public class ResqPeerNet extends CordovaPlugin {
         }
     }
 
-
     /**
      * Run comprehensive device health diagnostics
      */
@@ -3223,7 +2818,6 @@ public class ResqPeerNet extends CordovaPlugin {
             callbackContext.error("Error running device diagnostics: " + e.getMessage());
         }
     }
-	
 	
 	// =========================================================================
 	// DISPLAY MANAGEMENT METHODS - NEW
@@ -3386,7 +2980,6 @@ public class ResqPeerNet extends CordovaPlugin {
 		}
 	}
 	
-		
 	private void enableContentProtection(JSONObject args, CallbackContext callbackContext) {
 		try {
 			if (displayManagerBridge == null) {
@@ -3401,129 +2994,6 @@ public class ResqPeerNet extends CordovaPlugin {
 		}
 		
 	}
-
-    // WiFi Mesh Method Implementations
-    private void initializeWiFiMesh(CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.initializeMesh(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error initializing WiFi Mesh", e);
-            callbackContext.error("Error initializing WiFi Mesh: " + e.getMessage());
-        }
-    }
-    
-    private void createWiFiMeshGroup(CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.createMeshGroup(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error creating WiFi Mesh group", e);
-            callbackContext.error("Error creating WiFi Mesh group: " + e.getMessage());
-        }
-    }
-    
-    private void discoverWiFiPeers(CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.discoverPeers(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error discovering WiFi peers", e);
-            callbackContext.error("Error discovering WiFi peers: " + e.getMessage());
-        }
-    }
-    
-    private void connectToWiFiDevice(JSONObject args, CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.connectToDevice(args, callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error connecting to WiFi device", e);
-            callbackContext.error("Error connecting to WiFi device: " + e.getMessage());
-        }
-    }
-    
-    private void getWiFiPeers(CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.getDiscoveredPeers(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting WiFi peers", e);
-            callbackContext.error("Error getting WiFi peers: " + e.getMessage());
-        }
-    }
-    
-    private void sendWiFiMeshMessage(JSONObject args, CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.sendMeshMessage(args, callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error sending WiFi Mesh message", e);
-            callbackContext.error("Error sending WiFi Mesh message: " + e.getMessage());
-        }
-    }
-    
-    private void getWiFiMeshTopology(CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.getMeshTopology(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting WiFi Mesh topology", e);
-            callbackContext.error("Error getting WiFi Mesh topology: " + e.getMessage());
-        }
-    }
-    
-    private void removeWiFiMeshGroup(CallbackContext callbackContext) {
-        try {
-            if (wifiMeshManager == null) {
-                callbackContext.error("WiFi Mesh module not available");
-                return;
-            }
-            wifiMeshManager.removeGroup(callbackContext);
-        } catch (Exception e) {
-            Log.e(TAG, "Error removing WiFi Mesh group", e);
-            callbackContext.error("Error removing WiFi Mesh group: " + e.getMessage());
-        }
-    }
-
-    // Helper method untuk WiFi device status
-    private String getWifiDeviceStatus(int status) {
-        switch (status) {
-            case WifiP2pDevice.AVAILABLE:
-                return "available";
-            case WifiP2pDevice.INVITED:
-                return "invited";
-            case WifiP2pDevice.CONNECTED:
-                return "connected";
-            case WifiP2pDevice.FAILED:
-                return "failed";
-            case WifiP2pDevice.UNAVAILABLE:
-                return "unavailable";
-            default:
-                return "unknown";
-        }
-    }
 
     // =========================================================================
     // PRIVATE HELPER METHODS
@@ -3635,17 +3105,12 @@ public class ResqPeerNet extends CordovaPlugin {
             networkBridge.destroy();
             networkBridge = null;
         }
-        
-        if (peerNetworkingBridge != null) {
-            peerNetworkingBridge.destroy();
-            peerNetworkingBridge = null;
-        }
-        
-        if (bluetoothMeshManager != null) {
-            bluetoothMeshManager.destroy();
-            bluetoothMeshManager = null;
-        }
-        
+		
+		if (bluetoothMeshManager != null) {
+			bluetoothMeshManager.destroy();
+			bluetoothMeshManager = null;
+		}
+
         if (deviceManagerBridge != null) {
             deviceManagerBridge.destroy();
             deviceManagerBridge = null;
