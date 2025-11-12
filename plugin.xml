@@ -1,48 +1,110 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         id="cordova-plugin-resqpeernet"
-        version="1.0.0">
+        version="2.0.0">
+    
+    <name>ResqPeerNet</name>
+    <description>Cordova Plugin for Peer Network and System Integration</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,plugin,network,wallpaper,permission</keywords>
+    <repo>https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet</repo>
+    <issue>https://github.com/MuhammadAndikCahyono/cordova-plugin-resqpeernet/issues</issue>
 
-  <name>ResqPeerNet</name>
-  <description>P2P mesh plugin for disaster-ready networking (Wi-Fi Direct, BLE, mDNS, Hybrid)</description>
-  <license>Apache 2.0</license>
-  <keywords>cordova,plugin,p2p,mesh,rescue,offline</keywords>
-  <js-module src="www/resqpeernet.js" name="ResqPeerNet">
-    <clobbers target="window.ResqPeerNet" />
-  </js-module>
+    <js-module name="ResqPeerNet" src="www/resqpeernet.js">
+        <clobbers target="ResqPeerNet" />
+    </js-module>
 
-  <platform name="android">
-    <!-- Permissions -->
-    <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-      <uses-permission android:name="android.permission.INTERNET" />
-      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-      <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-      <uses-permission android:name="android.permission.BLUETOOTH" />
-      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-      <!-- Android 12+ -->
-      <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:required="false"/>
-      <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:required="false"/>
-      <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:required="false"/>
-      <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    </config-file>
+    <platform name="android">
+        <config-file target="config.xml" parent="/*">
+            <feature name="ResqPeerNet">
+                <param name="android-package" value="org.apache.cordova.resqpeernet.ResqPeerNet" />
+            </feature>
+        </config-file>
+        
+        <!-- Permissions dan Features -->
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <!-- Storage Permissions -->
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            
+            <!-- Network Permissions -->
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            
+            <!-- Location Permissions (required for WiFi info on Android 10+) -->
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            
+            <!-- Wallpaper Permissions -->
+            <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
-   <!-- Service/feature declarations -->
-<config-file target="AndroidManifest.xml" parent="/manifest">
-  <uses-feature android:name="android.hardware.wifi.direct" android:required="false"/>
-  <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
-</config-file>
-          
-    <!-- Source files -->
-    <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet" />
-    <source-file src="src/android/WiFiDirectBroadcastReceiver.java" target-dir="src/org/apache/cordova/resqpeernet" />
-  </platform>
+            <!-- Bluetooth Permissions -->
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+            <!-- Untuk Android 12+ -->
+            <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+            <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+            <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+            
+            <!-- Media Permissions -->
+            <uses-permission android:name="android.permission.RECORD_AUDIO" />
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+            
+            <!-- For Android 10+ -->
+            <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+			<uses-permission android:name="android.permission.WAKE_LOCK" />
+			
+			<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+			<uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+			<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+			<uses-permission android:name="android.permission.GET_TASKS" />
+			<!--<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />-->
+
+            <!-- Feature Requirements -->
+            <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+            <uses-feature android:name="android.hardware.location" android:required="false" />
+            <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+            <uses-feature android:name="android.hardware.location.network" android:required="false" />
+            <uses-feature android:name="android.hardware.camera" android:required="false" />
+            <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+            <uses-feature android:name="android.hardware.microphone" android:required="false" />
+            <uses-feature android:name="android.hardware.audio.output" android:required="false" />
+            <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+            <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />
+			<uses-feature android:name="android.hardware.wifi.direct" android:required="false" />
+        </config-file>
+
+        <!-- Source Files -->
+        <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet" />
+        <source-file src="src/android/modules/WallpaperManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/PermissionManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/NetworkManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/PeerNetworkingBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/BluetoothMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/DeviceManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/MediaManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/LocationManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/DisplayManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/AppDiscoveryManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/WifiMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/LocalNetworkMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/AutoLocalMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/MeshHybridManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/FileManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+
+    </platform>
+
+    <platform name="ios">
+        <!-- iOS implementation can be added later -->
+        <config-file target="config.xml" parent="/*">
+            <feature name="ResqPeerNet">
+                <param name="ios-package" value="ResqPeerNet" />
+            </feature>
+        </config-file>
+    </platform>
+
 </plugin>
-
-
-
-
-
