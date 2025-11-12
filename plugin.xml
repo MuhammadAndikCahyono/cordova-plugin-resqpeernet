@@ -17,7 +17,7 @@
     <platform name="android">
         <config-file target="config.xml" parent="/*">
             <feature name="ResqPeerNet">
-                <param name="android-package" value="org.apache.cordova.resqpeernet.ResqPeerNet" />
+                <param name="android-package" value="com.muhammadandikcahyono.resqpeernet.ResqPeerNet" />
             </feature>
         </config-file>
         
@@ -78,23 +78,18 @@
 			<uses-feature android:name="android.hardware.wifi.direct" android:required="false" />
         </config-file>
 
-        <!-- Source Files -->
-        <source-file src="src/android/ResqPeerNet.java" target-dir="src/org/apache/cordova/resqpeernet" />
-        <source-file src="src/android/modules/WallpaperManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/PermissionManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/NetworkManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/PeerNetworkingBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/BluetoothMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/DeviceManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/MediaManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/LocationManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/DisplayManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/AppDiscoveryManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/WifiMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/LocalNetworkMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/AutoLocalMeshManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/MeshHybridManager.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
-        <source-file src="src/android/modules/FileManagerBridge.java" target-dir="src/org/apache/cordova/resqpeernet/modules" />
+        <source-file src="src/android/modules/PermissionManager.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/DeviceManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/NetworkManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+		<source-file src="src/android/modules/BluetoothMeshManager.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+		<source-file src="src/android/modules/AutoLocalMeshManager.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/MediaManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/WallpaperManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/DisplayManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/LocationManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/FileManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/modules/AppDiscoveryManagerBridge.java" target-dir="src/com/muhammadandikcahyono/resqpeernet/modules" />
+        <source-file src="src/android/ResqPeerNet.java" target-dir="src/com/muhammadandikcahyono/resqpeernet" />
 
     </platform>
 
