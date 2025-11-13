@@ -1,6 +1,6 @@
 /**
  * ResqPeerNet Cordova Plugin JavaScript Bridge
- * Version: 1.0.0 - Enhanced Event System
+ * Version: 1.0.1 - Enhanced with Complete Bluetooth & Mesh Support
  */
 
 var ResqPeerNet = {
@@ -10,7 +10,7 @@ var ResqPeerNet = {
             successCallback,
             errorCallback,
             'ResqPeerNet',
-            'initialize',
+            'init',
             []
         );
     },
@@ -109,15 +109,66 @@ var ResqPeerNet = {
             []
         );
     },
-	/*
-	* File manager Bridge
-	**/
+
+	// =========================================================================
+    // FILE MANAGER METHODS
+    // =========================================================================
 	readFileAsText: function(args, successCallback, errorCallback) {
         cordova.exec(
             successCallback,
             errorCallback,
             'ResqPeerNet',
             'readFileAsText',
+            [args]
+        );
+    },
+
+    writeFile: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'writeFile',
+            [args]
+        );
+    },
+
+    createDirectory: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'createDirectory',
+            [args]
+        );
+    },
+
+    listDirectory: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'listDirectory',
+            [args]
+        );
+    },
+
+    deleteFile: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'deleteFile',
+            [args]
+        );
+    },
+
+    deleteDirectory: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'deleteDirectory',
             [args]
         );
     },
@@ -151,6 +202,7 @@ var ResqPeerNet = {
             [args]
         );
     },
+
     // Wallpaper manager methods
     getWallpaper: function(args, successCallback, errorCallback) {
         cordova.exec(
@@ -173,7 +225,6 @@ var ResqPeerNet = {
     },
 	
     setWallpaperFromFile: function(args, successCallback, errorCallback) {
-	
 	    // Validasi basic
 		if (!args.filePath) {
 			errorCallback("filePath is required");
@@ -254,257 +305,6 @@ var ResqPeerNet = {
         );
     },
 
-    getBluetoothStatus: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'getBluetoothStatus',
-            []
-        );
-    },
-
-    enableBluetooth: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'enableBluetooth',
-            []
-        );
-    },
-
-    getPairedDevices: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'getPairedDevices',
-            []
-        );
-    },
-
-    startBluetoothDiscovery: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'startBluetoothDiscovery',
-            []
-        );
-    },
-
-    stopBluetoothDiscovery: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'stopBluetoothDiscovery',
-            []
-        );
-    },
-
-    connectToBluetoothDevice: function(args, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'connectToBluetoothDevice',
-            [args]
-        );
-    },
-
-    startBluetoothServer: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'startBluetoothServer',
-            []
-        );
-    },
-
-    stopBluetoothServer: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'stopBluetoothServer',
-            []
-        );
-    },
-
-    sendMessage: function(args, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'sendMessage',
-            [args]
-        );
-    },
-
-    broadcastMessage: function(args, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'broadcastMessage',
-            [args]
-        );
-    },
-
-    getConnectedDevices: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'getConnectedDevices',
-            []
-        );
-    },
-
-    disconnectDevice: function(args, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'disconnectDevice',
-            [args]
-        );
-    },
-
-    disconnectAllDevices: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'disconnectAllDevices',
-            []
-        );
-    },
-
-    startDiscoveryListener: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'startDiscoveryListener',
-            []
-        );
-    },
-
-    startConnectionListener: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'startConnectionListener',
-            []
-        );
-    },
-
-    startMessageListener: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'startMessageListener',
-            []
-        );
-    },
-	
-	// MESH NETWORK METHODS
-    initializeMesh: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'initializeMesh',
-            []
-        );
-    },
-
-    joinMesh: function(args, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'joinMesh',
-            [args]
-        );
-    },
-
-    sendMeshMessage: function(args, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'sendMeshMessage',
-            [args]
-        );
-    },
-
-    broadcastToMesh: function(args, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'broadcastToMesh',
-            [args]
-        );
-    },
-
-    getMeshTopology: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'getMeshTopology',
-            []
-        );
-    },
-
-    startMeshEventListener: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'startMeshEventListener',
-            []
-        );
-    },
-	
-	discoverMeshNodes: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'discoverMeshNodes',
-            []
-        );
-    },
-
-    autoJoinMesh: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'autoJoinMesh',
-            []
-        );
-    },
-
-    getAvailableGateways: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback,
-            errorCallback,
-            'ResqPeerNet',
-            'getAvailableGateways',
-            []
-        );
-    },
-	
 	getDeviceInfo: function(successCallback, errorCallback) {
         cordova.exec(
             successCallback,
@@ -547,7 +347,7 @@ var ResqPeerNet = {
 	},
 
     // =========================================================================
-    // MEDIA METHODS - NEW: Audio Playback and Media Capture
+    // MEDIA METHODS - Audio Playback and Media Capture
     // =========================================================================
 	
 	loadCameraUI: function() {
@@ -643,7 +443,6 @@ var ResqPeerNet = {
 	loadAudioRecorderUI: function() {
 		return new Promise(function(resolve, reject) {
 			// Similar implementation to loadCameraUI
-			// Try different methods to load the HTML
 			const xhr = new XMLHttpRequest();
 			xhr.open('GET', 'audio-recorder-ui.html', true);
 			xhr.onreadystatechange = function() {
@@ -703,7 +502,7 @@ var ResqPeerNet = {
 		if (successCallback) successCallback({ status: 'custom_ui_closed' });
 	},
 
-    // Audio Playback Methods (from cordova-plugin-media)
+    // Audio Playback Methods
     createAudio: function(args, successCallback, errorCallback) {
         cordova.exec(
             successCallback,
@@ -835,10 +634,9 @@ var ResqPeerNet = {
     },
 
     // =========================================================================
-    // LOCATION METHODS - NEW: Location Services
+    // LOCATION METHODS - Location Services
     // =========================================================================
 
-    // Location Services Methods
     getCurrentLocation: function(args, successCallback, errorCallback) {
         cordova.exec(
             successCallback,
@@ -899,172 +697,412 @@ var ResqPeerNet = {
         );
     },
 
-    /**
-     * Start auto-mesh network (One-click setup)
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback
-     */
-    startAutoMesh: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback, 
-            errorCallback, 
-            'ResqPeerNet', 
-            'startAutoMesh', 
-            []
-        );
-    },
-
-    /**
-     * Stop auto-mesh network
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback
-     */
-    stopAutoMesh: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback, 
-            errorCallback, 
-            'ResqPeerNet', 
-            'stopAutoMesh', 
-            []
-        );
-    },
-
-    /**
-     * Broadcast message to entire auto-mesh network
-     * @param {Object} options - Message options
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback
-     */
-    broadcastToAutoMesh: function(options, successCallback, errorCallback) {
-        cordova.exec(
-            successCallback, 
-            errorCallback, 
-            'ResqPeerNet', 
-            'broadcastToAutoMesh', 
-            [options]
-        );
-    },
-
-    /**
-     * Get auto-mesh network status
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback
-     */
-    getAutoMeshStatus: function(successCallback, errorCallback) {
-        cordova.exec(
-            successCallback, 
-            errorCallback, 
-            'ResqPeerNet', 
-            'getAutoMeshStatus', 
-            []
-        );
-    },
-	
-	/**
-	 * START HYBRID MESH - Full Auto Connect
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
-	 */
-	startHybridMesh: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'startHybridMesh', []);
-	},
-
-	/**
-	 * Send message to all connected devices in hybrid mesh
-	 * @param {Object} options - Message options
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
-	 */
-	sendHybridMessage: function(options, successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'sendHybridMessage', [options]);
-	},
-
-	/**
-	 * Get hybrid mesh status
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
-	 */
-	getHybridStatus: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'getHybridStatus', []);
-	},
-
-	/**
-	 * Stop hybrid mesh
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
-	 */
-	stopHybridMesh: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'stopHybridMesh', []);
-	},
-	
 	// =========================================================================
-    // WiFi Mesh event
+    // BLUETOOTH MESH METHODS - NEW WITH BTMesh PREFIX
     // =========================================================================
-	
-	initializeWiFiMesh: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'initializeWiFiMesh', []);
-	},
-	
-	createWiFiMeshGroup: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'createWiFiMeshGroup', []);
-	},
-	
-	discoverWiFiPeers: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'discoverWiFiPeers', []);
-	},
-	
-	connectToWiFiDevice: function(options, successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'connectToWiFiDevice', [options]);
-	},
-	
-	getWiFiPeers: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'getWiFiPeers', []);
-	},
-	
-	sendWiFiMeshMessage: function(options, successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'sendWiFiMeshMessage', [options]);
-	},
-	
-	getWiFiMeshTopology: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'getWiFiMeshTopology', []);
-	},
-	
-	removeWiFiMeshGroup: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'removeWiFiMeshGroup', []);
-	},
-	
+
+    // Bluetooth Mesh Network Management
+    BTMeshStartNetwork: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartNetwork',
+            []
+        );
+    },
+
+    BTMeshStopNetwork: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStopNetwork',
+            []
+        );
+    },
+
+    BTMeshGetStatus: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshGetStatus',
+            []
+        );
+    },
+
+    // BLE Advertising
+    BTMeshStartAdvertising: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartAdvertising',
+            []
+        );
+    },
+
+    BTMeshStartEnhancedAdvertising: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartEnhancedAdvertising',
+            []
+        );
+    },
+
+    BTMeshStopAdvertising: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStopAdvertising',
+            []
+        );
+    },
+
+    // BLE Scanning
+    BTMeshStartScanning: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartScanning',
+            []
+        );
+    },
+
+    BTMeshStopScanning: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStopScanning',
+            []
+        );
+    },
+
+    // Mesh Messaging
+    BTMeshSendMessage: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshSendMessage',
+            [args]
+        );
+    },
+
+    BTMeshBroadcastMessage: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshBroadcastMessage',
+            [args]
+        );
+    },
+
+    BTMeshSendReliableMessage: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshSendReliableMessage',
+            [args]
+        );
+    },
+
+    BTMeshSendAcknowledgedMessage: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshSendAcknowledgedMessage',
+            [args]
+        );
+    },
+
+    // Device Connection
+    BTMeshConnectDevice: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshConnectDevice',
+            [args]
+        );
+    },
+
+    BTMeshDisconnectDevice: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshDisconnectDevice',
+            [args]
+        );
+    },
+
+    BTMeshGetConnectedDevices: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshGetConnectedDevices',
+            []
+        );
+    },
+
+    // Bluetooth Management
+    BTMeshIsBluetoothEnabled: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshIsBluetoothEnabled',
+            []
+        );
+    },
+
+    BTMeshEnableBluetooth: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshEnableBluetooth',
+            []
+        );
+    },
+
+    BTMeshGetBondedDevices: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshGetBondedDevices',
+            []
+        );
+    },
+
+    BTMeshStartDiscovery: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartDiscovery',
+            []
+        );
+    },
+
+    BTMeshCheckPermissions: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshCheckPermissions',
+            []
+        );
+    },
+
+    // Configuration and Status
+    BTMeshSetConfiguration: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshSetConfiguration',
+            [args]
+        );
+    },
+
+    BTMeshGetConfiguration: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshGetConfiguration',
+            []
+        );
+    },
+
+    BTMeshGetBLEStatus: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshGetBLEStatus',
+            []
+        );
+    },
+
+    BTMeshGetPerformanceStats: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshGetPerformanceStats',
+            []
+        );
+    },
+
+    BTMeshGetErrorLog: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshGetErrorLog',
+            []
+        );
+    },
+
+    BTMeshResetNetwork: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshResetNetwork',
+            []
+        );
+    },
+
+    // Event Listeners
+    BTMeshStartDiscoveryListener: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartDiscoveryListener',
+            []
+        );
+    },
+
+    BTMeshStartConnectionListener: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartConnectionListener',
+            []
+        );
+    },
+
+    BTMeshStartMessageListener: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartMessageListener',
+            []
+        );
+    },
+
+    BTMeshStartRoutingListener: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartRoutingListener',
+            []
+        );
+    },
+
+    BTMeshStartAdvertisingListener: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'BTMeshStartAdvertisingListener',
+            []
+        );
+    },
+
 	// =========================================================================
-    // Local Network Mesh event Implementations
+    // LOCAL MESH METHODS (Wi-Fi P2P) - NEW
     // =========================================================================
-	
-	initializeLocalMesh: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'initializeLocalMesh', []);
-	},
-	
-	discoverLocalPeers: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'discoverLocalPeers', []);
-	},
-	
-	getLocalPeers: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'getLocalPeers', []);
-	},	
-	
-	autoConnectLocalPeers: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'autoConnectLocalPeers', []);
-	},	
-	
-	sendLocalMeshMessage: function(options, successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'sendLocalMeshMessage', [options]);
-	},	
-	
-	getLocalMeshTopology: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'getLocalMeshTopology', []);
-	},	
-	
-	stopLocalMesh: function(successCallback, errorCallback) {
-		cordova.exec(successCallback, errorCallback, 'ResqPeerNet', 'stopLocalMesh', []);
-	},
-	
+
+    initializeMesh: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'initializeMesh',
+            []
+        );
+    },
+
+    discoverPeers: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'discoverPeers',
+            []
+        );
+    },
+
+    getDiscoveredPeers: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'getDiscoveredPeers',
+            []
+        );
+    },
+
+    connectToPeer: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'connectToPeer',
+            [args]
+        );
+    },
+
+    autoConnectPeers: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'autoConnectPeers',
+            []
+        );
+    },
+
+    sendMeshMessage: function(args, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'sendMeshMessage',
+            [args]
+        );
+    },
+
+    getMeshTopology: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'getMeshTopology',
+            []
+        );
+    },
+
+    stopMesh: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'ResqPeerNet',
+            'stopMesh',
+            []
+        );
+    },
+
     // =========================================================================
     // EVENT SYSTEM - ENHANCED WITH ALL METHOD EVENTS
     // =========================================================================
@@ -1208,9 +1246,6 @@ var ResqPeerNet = {
 
     /**
      * Get comprehensive system resources information
-     * Includes: Memory, CPU, Storage, Thermal status
-     * @param {function} successCallback - Callback for successful response
-     * @param {function} errorCallback - Callback for error response
      */
     getSystemResources: function(successCallback, errorCallback) {
         cordova.exec(
@@ -1224,8 +1259,6 @@ var ResqPeerNet = {
 
     /**
      * Get list of all available sensors on the device
-     * @param {function} successCallback - Callback for successful response
-     * @param {function} errorCallback - Callback for error response
      */
     getAvailableSensors: function(successCallback, errorCallback) {
         cordova.exec(
@@ -1239,8 +1272,6 @@ var ResqPeerNet = {
 
      /**
      * Get detailed information about specific sensor types
-     * @param {function} successCallback - Callback for successful response
-     * @param {function} errorCallback - Callback for error response
      */
     getSensorCapabilities: function(successCallback, errorCallback) {
         cordova.exec(
@@ -1254,8 +1285,6 @@ var ResqPeerNet = {
 
     /**
      * Run comprehensive device health diagnostics
-     * @param {function} successCallback - Callback for successful response
-     * @param {function} errorCallback - Callback for error response
      */
     runDeviceDiagnostics: function(successCallback, errorCallback) {
         cordova.exec(
@@ -1274,7 +1303,6 @@ var ResqPeerNet = {
     // Utility methods for device information
     getDeviceSummary: function(successCallback, errorCallback) {
         var self = this;
-        // Get real device info first, then create summary
         this.getDeviceInfo(function(deviceInfo) {
             // Safe data access dengan fallback values
             var summary = {
@@ -1339,8 +1367,6 @@ var ResqPeerNet = {
 
     /**
      * Get comprehensive system health report including all Phase 1 features
-     * @param {function} successCallback - Callback for successful response
-     * @param {function} errorCallback - Callback for error response
      */
     getComprehensiveSystemReport: function(successCallback, errorCallback) {
         console.log('🔄 Generating comprehensive system report...');
@@ -1378,9 +1404,6 @@ var ResqPeerNet = {
 
     /**
      * Start real-time system monitoring with all Phase 1 features
-     * @param {function} updateCallback - Callback for each monitoring update
-     * @param {number} interval - Monitoring interval in milliseconds (default: 5000)
-     * @return {number} monitorId - ID that can be used to stop monitoring
      */
     startSystemMonitoring: function(updateCallback, interval) {
         if (!updateCallback) {
@@ -1421,7 +1444,6 @@ var ResqPeerNet = {
 
     /**
      * Stop real-time system monitoring
-     * @param {number} monitorId - ID returned by startSystemMonitoring
      */
     stopSystemMonitoring: function(monitorId) {
         if (monitorId) {
@@ -1434,8 +1456,6 @@ var ResqPeerNet = {
 
     /**
      * Get sensor information with detailed capabilities
-     * @param {function} successCallback - Callback for successful response
-     * @param {function} errorCallback - Callback for error response
      */
     getDetailedSensorInfo: function(successCallback, errorCallback) {
         console.log('📡 Getting detailed sensor information...');
@@ -1466,8 +1486,6 @@ var ResqPeerNet = {
 
     /**
      * Quick health check - lightweight version of diagnostics
-     * @param {function} successCallback - Callback for successful response
-     * @param {function} errorCallback - Callback for error response
      */
     quickHealthCheck: function(successCallback, errorCallback) {
         console.log('🏥 Performing quick health check...');
@@ -1818,9 +1836,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Open Pro Camera with advanced controls
-	 * @param {object} options - Camera options {resolution, raw, camera}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraOpen: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1834,9 +1849,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Capture photo with Pro Camera
-	 * @param {object} options - Capture options
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraCapture: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1850,9 +1862,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Set manual ISO value
-	 * @param {object} options - {value: 100-3200}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraSetISO: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1866,9 +1875,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Set manual shutter speed
-	 * @param {object} options - {value: 0.0-1.0 (seconds)}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraSetShutterSpeed: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1882,9 +1888,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Set white balance mode
-	 * @param {object} options - {mode: 'auto'|'daylight'|'cloudy'|'tungsten'|'fluorescent'|'kelvin:5000'}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraSetWhiteBalance: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1898,9 +1901,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Set manual focus distance
-	 * @param {object} options - {distance: 0.0-1.0}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraSetFocus: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1914,9 +1914,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Set exposure compensation
-	 * @param {object} options - {value: -3 to +3}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraSetExposureCompensation: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1930,9 +1927,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Enable/disable RAW capture
-	 * @param {object} options - {enable: true|false}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraEnableRAW: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1946,9 +1940,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Close Pro Camera
-	 * @param {object} options - Close options
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraClose: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1962,9 +1953,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Get current camera settings
-	 * @param {object} options - Options
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	proCameraGetSettings: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -1982,8 +1970,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Quick Pro Camera setup with sensible defaults
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	quickProCameraSetup: function(successCallback, errorCallback) {
 		this.proCameraOpen({
@@ -1995,8 +1981,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Test all Pro Camera features
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	testProCameraFeatures: function(successCallback, errorCallback) {
 		console.log('Testing Pro Camera Features...');
@@ -2081,8 +2065,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Create Pro Camera controller with chainable methods
-	 * @param {object} options - Initial options
-	 * @returns {object} Camera controller instance
 	 */
 	createProCameraController: function(options) {
 		var controller = {
@@ -2162,13 +2144,11 @@ var ResqPeerNet = {
 	},
 	
 	// =========================================================================
-	// DISPLAY MANAGEMENT METHODS - NEW
+	// DISPLAY MANAGEMENT METHODS
 	// =========================================================================
 
 	/**
 	 * Enter fullscreen immersive mode
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	enterFullscreen: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -2190,13 +2170,13 @@ var ResqPeerNet = {
 		);
 	},
 	
-	setScreenshotAllowed: function(successCallback, errorCallback) {
+	setScreenshotAllowed: function(args, successCallback, errorCallback) {
 		cordova.exec(
 			successCallback,
 			errorCallback,
 			'ResqPeerNet',
 			'setScreenshotAllowed',
-			[]
+			[args]
 		);
 	},
 	
@@ -2210,20 +2190,18 @@ var ResqPeerNet = {
 		);
 	},
 	
-	enableContentProtection: function(successCallback, errorCallback) {
+	enableContentProtection: function(args, successCallback, errorCallback) {
 		cordova.exec(
 			successCallback,
 			errorCallback,
 			'ResqPeerNet',
 			'enableContentProtection',
-			[]
+			[args]
 		);
 	},
 
 	/**
 	 * Exit fullscreen mode
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	exitFullscreen: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -2237,8 +2215,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Toggle between fullscreen and normal mode
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	toggleFullscreen: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -2252,9 +2228,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Set screen orientation
-	 * @param {object} options - {orientation: 'portrait'|'landscape'|'sensor'|'unspecified'}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	setScreenOrientation: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -2268,9 +2241,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Keep screen on (prevent screen timeout)
-	 * @param {object} options - {keepOn: true|false}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	keepScreenOn: function(options, successCallback, errorCallback) {
 		cordova.exec(
@@ -2284,8 +2254,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Get display metrics and information
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	getDisplayMetrics: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -2299,8 +2267,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Get current fullscreen status
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	getFullscreenStatus: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -2314,8 +2280,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Enter immersive mode (temporary fullscreen)
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	enterImmersiveMode: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -2328,13 +2292,11 @@ var ResqPeerNet = {
 	},
 	
 	// =========================================================================
-	// DISPLAY MANAGEMENT TEST METHODS - NEW
+	// DISPLAY MANAGEMENT TEST METHODS
 	// =========================================================================
 
 	/**
 	 * Test fullscreen functionality
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	testFullscreenFunctionality: function(successCallback, errorCallback) {
 		console.log('Testing Fullscreen Functionality...');
@@ -2424,8 +2386,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Test immersive mode functionality
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	testImmersiveMode: function(successCallback, errorCallback) {
 		console.log('Testing Immersive Mode...');
@@ -2450,8 +2410,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Comprehensive display features test
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	testAllDisplayFeatures: function(successCallback, errorCallback) {
 		console.log('=== TESTING ALL DISPLAY FEATURES ===');
@@ -2537,8 +2495,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Demo display features with visual feedback
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	demoDisplayFeatures: function(successCallback, errorCallback) {
 		console.log('Starting Display Features Demo...');
@@ -2850,8 +2806,6 @@ var ResqPeerNet = {
 
     /**
      * Get installed applications (default: user apps only)
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback  
      */
     getInstalledApps: function(successCallback, errorCallback) {
         cordova.exec(
@@ -2865,8 +2819,6 @@ var ResqPeerNet = {
 
     /**
      * Get only USER applications (non-system)
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback  
      */
     getUserApps: function(successCallback, errorCallback) {
         cordova.exec(
@@ -2880,8 +2832,6 @@ var ResqPeerNet = {
 
     /**
      * Get ALL applications (including system apps)
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback
      */
     getAllInstalledApps: function(successCallback, errorCallback) {
         cordova.exec(
@@ -2895,8 +2845,6 @@ var ResqPeerNet = {
 
     /**
      * Get only SYSTEM applications
-     * @param {function} successCallback - Success callback
-     * @param {function} errorCallback - Error callback
      */
     getSystemApps: function(successCallback, errorCallback) {
         cordova.exec(
@@ -2910,9 +2858,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Get detailed information about specific application
-	 * @param {object} args - {packageName: 'com.example.app'}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	getAppInfo: function(args, successCallback, errorCallback) {
 		cordova.exec(
@@ -2926,9 +2871,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Uninstall an application (opens system uninstall dialog)
-	 * @param {object} args - {packageName: 'com.example.app'}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	uninstallApp: function(args, successCallback, errorCallback) {
 		cordova.exec(
@@ -2942,9 +2884,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Launch an application if installed
-	 * @param {object} args - {packageName: 'com.example.app'} 
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	launchApp: function(args, successCallback, errorCallback) {
 		cordova.exec(
@@ -2958,9 +2897,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Open app in Play Store
-	 * @param {object} args - {packageName: 'com.example.app'}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	openAppInPlayStore: function(args, successCallback, errorCallback) {
 		cordova.exec(
@@ -2974,9 +2910,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Check if specific app is installed
-	 * @param {object} args - {packageName: 'com.example.app'}
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	isAppInstalled: function(args, successCallback, errorCallback) {
 		cordova.exec(
@@ -2990,8 +2923,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Start real-time monitoring for app install/uninstall events
-	 * @param {function} successCallback - Success callback (will keep callback alive for events)
-	 * @param {function} errorCallback - Error callback
 	 */
 	startAppMonitoring: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -3005,8 +2936,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Stop real-time app monitoring
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	stopAppMonitoring: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -3020,8 +2949,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Get current app monitoring status
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	getMonitoringStatus: function(successCallback, errorCallback) {
 		cordova.exec(
@@ -3034,14 +2961,11 @@ var ResqPeerNet = {
 	},
 	
 	// =========================================================================
-	// APP DISCOVERY UTILITY METHODS - NEW
+	// APP DISCOVERY UTILITY METHODS
 	// =========================================================================
 
 	/**
 	 * Quick utility to search apps by name
-	 * @param {string} query - Search query
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	searchApps: function(query, successCallback, errorCallback) {
 		this.getInstalledApps(
@@ -3066,8 +2990,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Get apps by category (basic categorization)
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	getAppsByCategory: function(successCallback, errorCallback) {
 		this.getInstalledApps(
@@ -3134,8 +3056,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Get app usage statistics (basic)
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	getAppStats: function(successCallback, errorCallback) {
 		this.getInstalledApps(
@@ -3190,9 +3110,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Quick app info by package name
-	 * @param {string} packageName - Package name to check
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	quickAppInfo: function(packageName, successCallback, errorCallback) {
 		var self = this;
@@ -3245,9 +3162,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Batch check multiple apps
-	 * @param {array} packageNames - Array of package names
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	batchCheckApps: function(packageNames, successCallback, errorCallback) {
 		var results = {};
@@ -3291,8 +3205,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Test app discovery functionality
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	testAppDiscovery: function(successCallback, errorCallback) {
 		console.log('Testing App Discovery Features...', 'info');
@@ -3374,8 +3286,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Test app management functionality
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	testAppManagement: function(successCallback, errorCallback) {
 		console.log('Testing App Management Features...', 'info');
@@ -3405,8 +3315,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Demo app discovery features
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	demoAppDiscovery: function(successCallback, errorCallback) {
 		console.log('Starting App Discovery Demo...');
@@ -3477,9 +3385,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Start real-time app monitoring demo
-	 * @param {function} eventCallback - Callback for app change events
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	startAppMonitoringDemo: function(eventCallback, successCallback, errorCallback) {
 		console.log('Starting Real-time App Monitoring Demo...');
@@ -3515,8 +3420,6 @@ var ResqPeerNet = {
 
 	/**
 	 * Stop app monitoring demo
-	 * @param {function} successCallback - Success callback
-	 * @param {function} errorCallback - Error callback
 	 */
 	stopAppMonitoringDemo: function(successCallback, errorCallback) {
 		console.log('Stopping App Monitoring Demo...');
@@ -3549,7 +3452,7 @@ var ResqPeerNet = {
 	_initializeEventSystem: function() {
 		console.log('Initializing ResqPeerNet Event System...');
 		
-		// List of methods to wrap with events - 100% COMPLETE VERSION
+		// List of methods to wrap with events - UPDATED WITH ALL METHODS
 		var methodsToWrap = [
 			// =========================================================================
 			// BASIC PLUGIN METHODS
@@ -3565,7 +3468,8 @@ var ResqPeerNet = {
 			// =========================================================================
 			// FILE MANAGEMENT
 			// =========================================================================
-			'readFileAsText', 'getStorageInfo', 'searchFiles', 'getFileInfo',
+			'readFileAsText', 'writeFile', 'createDirectory', 'listDirectory', 
+			'deleteFile', 'deleteDirectory', 'getStorageInfo', 'searchFiles', 'getFileInfo',
 				
 			// =========================================================================
 			// WALLPAPER MANAGEMENT
@@ -3577,23 +3481,7 @@ var ResqPeerNet = {
 			// NETWORK STATUS
 			// =========================================================================
 			'getNetworkStatus', 'getWifiStatus', 'getMobileStatus',
-			
-			// =========================================================================
-			// BLUETOOTH
-			// =========================================================================
-			'getBluetoothStatus', 'enableBluetooth', 'getPairedDevices', 
-			'startBluetoothDiscovery', 'stopBluetoothDiscovery', 'connectToBluetoothDevice', 
-			'startBluetoothServer', 'stopBluetoothServer', 'sendMessage', 'broadcastMessage', 
-			'getConnectedDevices', 'disconnectDevice', 'disconnectAllDevices', 
-			'startDiscoveryListener', 'startConnectionListener', 'startMessageListener',
-			
-			// =========================================================================
-			// MESH NETWORK
-			// =========================================================================
-			'initializeMesh', 'joinMesh', 'sendMeshMessage', 'broadcastToMesh', 
-			'getMeshTopology', 'startMeshEventListener', 'discoverMeshNodes', 
-			'autoJoinMesh', 'getAvailableGateways',
-			
+
 			// =========================================================================
 			// DEVICE INFO & BATTERY
 			// =========================================================================
@@ -3603,7 +3491,7 @@ var ResqPeerNet = {
 			// MEDIA CAPTURE - BASIC
 			// =========================================================================
 			'captureImageWithChoice', 'captureAudioWithChoice', 'openCustomCamera', 
-						'openCustomAudioRecorder', 'closeCustomUI', 'captureAudio', 'captureImage', 
+			'openCustomAudioRecorder', 'closeCustomUI', 'captureAudio', 'captureImage', 
 			'captureVideo', 'getSupportedFormats',
 			
 			// =========================================================================
@@ -3617,6 +3505,27 @@ var ResqPeerNet = {
 			// =========================================================================
 			'getCurrentLocation', 'startLocationTracking', 'stopLocationTracking', 
 			'getLocationPermissions', 'calculateDistance', 'getAvailableProviders',
+			
+			// =========================================================================
+			// BLUETOOTH MESH METHODS - UPDATED
+			// =========================================================================
+			'BTMeshStartNetwork', 'BTMeshStopNetwork', 'BTMeshGetStatus',
+			'BTMeshStartAdvertising', 'BTMeshStartEnhancedAdvertising', 'BTMeshStopAdvertising',
+			'BTMeshStartScanning', 'BTMeshStopScanning', 'BTMeshSendMessage', 
+			'BTMeshBroadcastMessage', 'BTMeshSendReliableMessage', 'BTMeshSendAcknowledgedMessage',
+			'BTMeshConnectDevice', 'BTMeshDisconnectDevice', 'BTMeshGetConnectedDevices',
+			'BTMeshIsBluetoothEnabled', 'BTMeshEnableBluetooth', 'BTMeshGetBondedDevices',
+			'BTMeshStartDiscovery', 'BTMeshCheckPermissions', 'BTMeshSetConfiguration',
+			'BTMeshGetConfiguration', 'BTMeshGetBLEStatus', 'BTMeshGetPerformanceStats',
+			'BTMeshGetErrorLog', 'BTMeshResetNetwork', 'BTMeshStartDiscoveryListener',
+			'BTMeshStartConnectionListener', 'BTMeshStartMessageListener', 'BTMeshStartRoutingListener',
+			'BTMeshStartAdvertisingListener',
+
+			// =========================================================================
+			// LOCAL MESH METHODS - WIFI
+			// =========================================================================
+			'initializeMesh', 'discoverPeers', 'getDiscoveredPeers', 'connectToPeer',
+			'autoConnectPeers', 'sendMeshMessage', 'getMeshTopology', 'stopMesh',
 			
 			// =========================================================================
 			// SYSTEM MONITORING - CORE
@@ -3655,19 +3564,7 @@ var ResqPeerNet = {
 			'stopAppMonitoring', 'getMonitoringStatus', 'searchApps',
 			'getAppsByCategory', 'getAppStats', 'quickAppInfo', 'batchCheckApps',
 			'getUserApps', 'getAllInstalledApps', 'getSystemApps',
-			
-			// =========================================================================
-			// MESH NETWORK VARIANTS
-			// =========================================================================
-			'initializeWiFiMesh', 'createWiFiMeshGroup', 'discoverWiFiPeers',
-			'connectToWiFiDevice', 'getWiFiPeers', 'sendWiFiMeshMessage',
-			'getWiFiMeshTopology', 'removeWiFiMeshGroup',
-			'initializeLocalMesh', 'discoverLocalPeers', 'getLocalPeers',
-			'autoConnectLocalPeers', 'sendLocalMeshMessage', 'getLocalMeshTopology',
-			'stopLocalMesh',
-			'startAutoMesh', 'stopAutoMesh', 'broadcastToAutoMesh', 'getAutoMeshStatus',
-			'startHybridMesh', 'sendHybridMessage', 'getHybridStatus', 'stopHybridMesh',
-			
+
 			// =========================================================================
 			// MEDIA UTILITIES
 			// =========================================================================
@@ -3714,7 +3611,7 @@ var ResqPeerNet = {
 	},
 
 	// =========================================================================
-	// DISPLAY UTILITY METHODS - BARU DITAMBAHKAN
+	// DISPLAY UTILITY METHODS
 	// =========================================================================
 
 	/**
@@ -3894,7 +3791,7 @@ var ResqPeerNet = {
 };
 
 // =========================================================================
-// AUTOMATIC EVENT CATEGORIES AND TYPES
+// AUTOMATIC EVENT CATEGORIES AND TYPES - UPDATED
 // =========================================================================
 
 /**
@@ -3922,20 +3819,38 @@ ResqPeerNet.EVENTS = {
 	NETWORK: {
 		STATUS: 'networkStatus',
 		WIFI: 'wifiStatus',
-		BLUETOOTH: 'bluetooth',
-		MESH: 'mesh',
-		CONNECTION: 'connection',
-		MESSAGE: 'message',
-		BLUETOOTH_DISCOVERY: 'bluetoothDiscovery',
-		BLUETOOTH_CONNECTION: 'bluetoothConnection',
-		BLUETOOTH_SERVER: 'bluetoothServer',
-		MESH_TOPOLOGY: 'meshTopology',
-		MESH_NODE_DISCOVERY: 'meshNodeDiscovery',
-		AUTO_MESH: 'autoMesh',
-		HYBRID_MESH: 'hybridMesh',
-		WIFI_MESH: 'wifiMesh',
-		LOCAL_MESH: 'localMesh',
-		GATEWAY_DISCOVERY: 'gatewayDiscovery'
+		MOBILE: 'mobileStatus'
+	},
+	
+	// Bluetooth Mesh Events - NEW
+	BLUETOOTH_MESH: {
+		NETWORK_STARTED: 'btmesh_network_started',
+		NETWORK_STOPPED: 'btmesh_network_stopped',
+		NETWORK_STATUS: 'btmesh_network_status',
+		ADVERTISING_STARTED: 'btmesh_advertising_started',
+		ADVERTISING_STOPPED: 'btmesh_advertising_stopped',
+		SCANNING_STARTED: 'btmesh_scanning_started',
+		SCANNING_STOPPED: 'btmesh_scanning_stopped',
+		MESSAGE_SENT: 'btmesh_message_sent',
+		MESSAGE_RECEIVED: 'btmesh_message_received',
+		DEVICE_CONNECTED: 'btmesh_device_connected',
+		DEVICE_DISCONNECTED: 'btmesh_device_disconnected',
+		DEVICE_DISCOVERED: 'btmesh_device_discovered',
+		BLUETOOTH_STATUS: 'btmesh_bluetooth_status',
+		PERFORMANCE_STATS: 'btmesh_performance_stats',
+		ERROR: 'btmesh_error'
+	},
+	
+	// Local Mesh Events (Wi-Fi P2P) - NEW
+	LOCAL_MESH: {
+		INITIALIZED: 'local_mesh_initialized',
+		PEER_DISCOVERED: 'local_mesh_peer_discovered',
+		PEER_CONNECTED: 'local_mesh_peer_connected',
+		PEER_DISCONNECTED: 'local_mesh_peer_disconnected',
+		MESSAGE_SENT: 'local_mesh_message_sent',
+		MESSAGE_RECEIVED: 'local_mesh_message_received',
+		TOPOLOGY_UPDATED: 'local_mesh_topology_updated',
+		MESH_STOPPED: 'local_mesh_stopped'
 	},
 	
 	// Media Events
@@ -4018,6 +3933,7 @@ ResqPeerNet.EVENTS = {
 	// File Management Events
 	FILE_MANAGEMENT: {
 		FILE_READ: 'fileRead',
+		FILE_WRITE: 'fileWrite',
 		FILE_SEARCH: 'fileSearch',
 		FILE_INFO: 'fileInfo',
 		STORAGE_INFO: 'storageInfo',
@@ -4077,8 +3993,26 @@ ResqPeerNet.setupCommonListeners = function() {
 		console.log('Image captured successfully:', data.result.mediaFiles);
 	});
 	
-	this.on('bluetoothStatusSuccess', function(data) {
-		console.log('Bluetooth status:', data.result.enabled ? 'Enabled' : 'Disabled');
+	// Bluetooth Mesh Events - NEW
+	this.on('btmesh_network_started', function(event) {
+		console.log('Bluetooth Mesh Network Started:', event);
+	});
+	
+	this.on('btmesh_device_discovered', function(event) {
+		console.log('Bluetooth Device Discovered:', event.deviceAddress);
+	});
+	
+	this.on('btmesh_message_received', function(event) {
+		console.log('Bluetooth Mesh Message Received:', event.message);
+	});
+	
+	// Local Mesh Events - NEW
+	this.on('local_mesh_peer_discovered', function(event) {
+		console.log('Local Mesh Peer Discovered:', event.deviceName);
+	});
+	
+	this.on('local_mesh_message_received', function(event) {
+		console.log('Local Mesh Message Received:', event.message);
 	});
 	
 	// App Discovery Events
@@ -4133,7 +4067,7 @@ if (typeof cordova !== 'undefined') {
 		// Also make it available globally for easier access
 		window.ResqPeerNet = ResqPeerNet;
 		
-		console.log('ResqPeerNet plugin JavaScript bridge initialized - Version 1.0.0 with Enhanced Event System');
+		console.log('ResqPeerNet plugin JavaScript bridge initialized - Version 1.0.1 with Complete Bluetooth & Mesh Support');
 		
 		// Setup common listeners automatically
 		setTimeout(function() {
