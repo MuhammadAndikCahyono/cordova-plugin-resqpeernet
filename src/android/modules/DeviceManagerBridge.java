@@ -43,6 +43,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.lang.reflect.Method;
+
 public class DeviceManagerBridge {
     private static final String TAG = "DeviceManagerBridge";
     private Context context;
