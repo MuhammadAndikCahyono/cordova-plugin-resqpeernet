@@ -63,6 +63,9 @@
 			<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 			<uses-permission android:name="android.permission.GET_TASKS" />
 			<!--<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />-->
+			
+			<uses-permission android:name="android.permission.READ_CONTACTS" />
+			<uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
             <!-- Feature Requirements -->
             <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
@@ -103,3 +106,4 @@
     </platform>
 
 </plugin>
+
